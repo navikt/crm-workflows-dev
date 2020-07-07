@@ -1,0 +1,41 @@
+# Unique name for this workflow
+name: "Fetch changed permsets"
+
+# Definition when the workflow should run
+on:
+  schedule:
+    - cron: "*/2 * * * *"
+
+# Jobs to be executed
+jobs:
+  prod:
+    name: Prod
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout code
+      - name: "Checkout source code"
+        uses: actions/checkout@v2
+        with:
+          ref: "master"
+
+      # Clone Workflows repo
+      - name: "Clone Workflows repo"
+        run: |
+          git clone https://github.com/navikt/crm-workflows-base.git tmp
+
+      # Move files to correct folder
+      - name: "Move files to correct folder"
+        run: |
+          mv tmp/workflows/* .github/workflows/
+
+      # Delete Workflows repo
+      - name: "Delete Workflows repo"
+        run: |
+          rm -rf tmp
+
+      # Commit changed permsets
+      - name: "Commit changed permsets"
+        uses: stefanzweifel/git-auto-commit-action@v4.1.6
+        with:
+          commit_message: Updated Workflows
+          branch: "master"
