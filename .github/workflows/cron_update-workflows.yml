@@ -4,7 +4,7 @@ name: "Update Workflows"
 # Definition when the workflow should run
 on:
   schedule:
-    - cron: "*/2 * * * *"
+    - cron: "44,45,46,47,48 * * * *"
 
 # Jobs to be executed
 jobs:
