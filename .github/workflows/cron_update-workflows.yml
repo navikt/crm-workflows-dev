@@ -1,5 +1,5 @@
 # Unique name for this workflow
-name: "Fetch changed permsets"
+name: "Update Workflows"
 
 # Definition when the workflow should run
 on:
