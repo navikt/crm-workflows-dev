@@ -33,15 +33,13 @@ jobs:
         run: |
           rm -rf tmp
 
-      # Commit files
-      - name: Commit files
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git commit -m "Updated Workflows" -a
 
-      # Push commit
-      - name: Push new version number
-        uses: ad-m/github-push-action@master
+      # Create pull request
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v2
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          title: [CI] Updated Workflows
+          body: |
+            Please merge me to get the newest, the best, the most groundbreaking Workflows ever created :heart_eyes:
+            See the changelog for the Workflows over at [https://github.com/navikt/crm-workflows-base](crm-workflows-base).
+          commit-message: [CI] Updated Workflows
