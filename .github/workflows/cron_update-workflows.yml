@@ -8,8 +8,7 @@ on:
 
 # Jobs to be executed
 jobs:
-  prod:
-    name: Prod
+  update:
     runs-on: ubuntu-latest
     steps:
       # Checkout code
