@@ -66,7 +66,7 @@ jobs:
       - name: Generate changelog
         if: success() || (failure() && steps.package-version-create.outputs.isSuccess)
         id: changelog
-        uses: metcalfc/changelog-generator@v0.4.1
+        uses: metcalfc/changelog-generator@v0.4.0
         with:
           myToken: ${{ secrets.GITHUB_TOKEN }}
 
@@ -103,26 +103,15 @@ jobs:
           echo "::set-output name=message::(CI) Updated to new version number $(cat sfdx-project.json | jq '.packageDirectories[0].versionNumber' -r | sed 's/.\{5\}$//')"
           cat sfdx-project.json
 
-      # The main branch is protected, so we have to take a sequea for updating the README through a new PR
-      - name: "Create new branch and pull request for updated package version ID"
-        uses: peter-evans/create-pull-request@v2
-        with:
-          title: "Added new package version ID"
-          commit-message: ${{steps.build-commit-message.outputs.message}}
-          branch: "auto/package-version-update"
-          token: ${{ secrets.GITHUB_TOKEN }}
+      # Commit files
+      - name: Commit files
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git commit -m "${{steps.build-commit-message.outputs.message}}" -a
 
-      # Merge pull request
-      - name: "Merge pull request"
-        uses: juliangruber/merge-pull-request-action@v1
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          number: ${{ env.PULL_REQUEST_NUMBER }}
-          method: squash
-
-      # Delete pull request, for GitHub Actions initiated PRs the auto-delete of GitHub doesn't work
-      - name: "Delete pull request branch"
-        uses: dawidd6/action-delete-branch@v2
+      # Push commit
+      - name: Push new version number
+        uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          numbers: ${{ env.PULL_REQUEST_NUMBER }}
