@@ -131,14 +131,14 @@ jobs:
           commit-message: ${{steps.build-commit-message.outputs.message}}
           branch: "auto/package-version-update"
 
-          # ! USES CUSTOM PAT TO INITIATE STATUS CHECKS (SEE "Require status checks to pass before merging" IN BRANCHES SETTINGS IN REPO)
-          token: ${{ secrets.DEPLOYMENT_PAT }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       # Merge pull request
       - name: "Merge pull request"
         uses: juliangruber/merge-pull-request-action@v1
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          # ! USES CUSTOM PAT TO INITIATE STATUS CHECKS (SEE "Require status checks to pass before merging" IN BRANCHES SETTINGS IN REPO)
+          github-token: ${{ secrets.DEPLOYMENT_PAT }}
           number: ${{ env.PULL_REQUEST_NUMBER }}
           method: squash
 
