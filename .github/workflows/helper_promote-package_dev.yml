@@ -41,9 +41,9 @@ jobs:
           sfdx force:auth:sfdxurl:store -f ./PROD_SFDX_URL.txt -a devhub -d
           rm -f ./PROD_SFDX_URL.txt
 
-      # Promote package
-      - name: Promote package
-        run: "sfdx force:package:version:promote --package ${{ github.event.inputs.packageId }} --noprompt"
+      # # Promote package
+      # - name: Promote package
+      #   run: "sfdx force:package:version:promote --package ${{ github.event.inputs.packageId }} --noprompt"
 
   install-package-preprod:
     name: Install Package in Preprod
