@@ -138,7 +138,7 @@ jobs:
       - name: "Merge pull request"
         uses: juliangruber/merge-pull-request-action@v1
         with:
-          github-token: ${{ secrets.DEPLOYMENT_PAT }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           number: ${{ env.PULL_REQUEST_NUMBER }}
           method: squash
 
