@@ -113,10 +113,9 @@ jobs:
       # Commit files
       - name: Commit files
       - uses: stefanzweifel/git-auto-commit-action@v4
-      with:
-        commit_message: test
-        push_options: '--force'
-
+        with:
+          commit_message: test
+          push_options: "--force"
       # # Push commit
       # - name: Push new version number
       #   uses: ad-m/github-push-action@master
