@@ -130,19 +130,15 @@ jobs:
           title: "Added new package version ID"
           commit-message: ${{steps.build-commit-message.outputs.message}}
           branch: "auto/package-version-update"
-          token: ${{ secrets.DEPLOYMENT_PAT }}
 
-      # Sleep for 1 minute while permset groups are updating
-      - name: Sleep for 1 minute while permset groups are updating
-        uses: jakejarvis/wait-action@master
-        with:
-          time: "1m"
+          # ! USES CUSTOM PAT TO INITIATE STATUS CHECKS (SEE "Require status checks to pass before merging" IN BRANCHES SETTINGS IN REPO)
+          token: ${{ secrets.DEPLOYMENT_PAT }}
 
       # Merge pull request
       - name: "Merge pull request"
         uses: juliangruber/merge-pull-request-action@v1
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.DEPLOYMENT_PAT }}
           number: ${{ env.PULL_REQUEST_NUMBER }}
           method: squash
 
