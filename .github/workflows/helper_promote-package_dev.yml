@@ -94,34 +94,17 @@ jobs:
       #     draft: false
       #     prerelease: false
 
-      # # Update version number
-      # - name: Update version number
-      #   id: packaging-updater
-      #   uses: navikt/github-action-sfdx-version-updater@master
-
       # Update version number
-      - name: add data
-        run: echo "test" >> test
+      - name: Update version number
+        id: packaging-updater
+        uses: navikt/github-action-sfdx-version-updater@master
 
-      # # Create commit message by extracting the latest version number from sfdx-project.json
-      # - name: Build commit message
-      #   id: build-commit-message
-      #   run: |
-      #     echo "::set-output name=message::(CI) Updated to new version number $(cat sfdx-project.json | jq '.packageDirectories[0].versionNumber' -r | sed 's/.\{5\}$//')"
-      #     cat sfdx-project.json
-
-      # # Commit files
-      # - name: Commit files
-      #   uses: stefanzweifel/git-auto-commit-action@v4
-      #   with:
-      #     commit_message: test
-      #     push_options: "--force"
-
-      # # Push commit
-      # - name: Push new version number
-      #   uses: ad-m/github-push-action@master
-      #   with:
-      #     github_token: ${{ secrets.DEPLOYMENT_PAT }}
+      # Create commit message by extracting the latest version number from sfdx-project.json
+      - name: Build commit message
+        id: build-commit-message
+        run: |
+          echo "::set-output name=message::(CI) Updated to new version number $(cat sfdx-project.json | jq '.packageDirectories[0].versionNumber' -r | sed 's/.\{5\}$//')"
+          cat sfdx-project.json
 
       # The main branch is protected, so we have to take a sequea for updating the README through a new PR
       - name: "Create new branch and pull request for updated package version ID"
