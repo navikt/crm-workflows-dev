@@ -1,17 +1,17 @@
 {
-    "packageDirectories": [
-        {
-            "path": "force-app",
-            "default": true,
-            "package": "crm-workflows-dev",
-            "versionName": "ver 0.1",
-            "versionNumber": "0.4.0.NEXT"
-        }
-    ],
-    "namespace": "",
-    "sfdcLoginUrl": "https://login.salesforce.com",
-    "sourceApiVersion": "47.0",
-    "packageAliases": {
-        "crm-workflows-dev": "0Ho2o000000Kym5CAC"
+  "packageDirectories": [
+    {
+      "path": "force-app",
+      "default": true,
+      "package": "crm-workflows-dev",
+      "versionName": "ver 0.1",
+      "versionNumber": "0.3.0.NEXT"
     }
+  ],
+  "namespace": "",
+  "sfdcLoginUrl": "https://login.salesforce.com",
+  "sourceApiVersion": "47.0",
+  "packageAliases": {
+    "crm-workflows-dev": "0Ho2o000000Kym5CAC"
+  }
 }
