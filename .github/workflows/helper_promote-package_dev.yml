@@ -4,24 +4,26 @@ on:
     inputs:
       packageId:
         description: "Package ID"
-        required: true
+        # required: true
+        # TODO remove
       comment:
         description: "Release Comment"
-        required: true
+        # required: true
+        # TODO remove
 jobs:
   promote-package:
     runs-on: ubuntu-latest
     steps:
-      # Print Input Values
-      - name: Print input values
-        run: |
-          echo "Package ID: ${{ github.event.inputs.packageId }}"
-          echo "Initiator: ${{ github.actor }}"
-          echo "Comment: ${{ github.event.inputs.comment }}"
+      # # Print Input Values
+      # - name: Print input values
+      #   run: |
+      #     echo "Package ID: ${{ github.event.inputs.packageId }}"
+      #     echo "Initiator: ${{ github.actor }}"
+      #     echo "Comment: ${{ github.event.inputs.comment }}"
 
-      # Install SFDX
-      - name: Authorize SFDX
-        uses: sfdx-actions/setup-sfdx@v1
+      # # Install SFDX
+      # - name: Authorize SFDX
+      #   uses: sfdx-actions/setup-sfdx@v1
 
       # Checkout code in master
       - name: Checkout source code from master
@@ -91,10 +93,10 @@ jobs:
       #     draft: false
       #     prerelease: false
 
-      # # Update version number
-      # - name: Update version number
-      #   id: packaging-updater
-      #   uses: navikt/github-action-sfdx-version-updater@master
+      # Update version number
+      - name: Update version number
+        id: packaging-updater
+        uses: navikt/github-action-sfdx-version-updater@master
 
       # Create commit message by extracting the latest version number from sfdx-project.json
       - name: Build commit message
