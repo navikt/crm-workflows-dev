@@ -13,7 +13,7 @@ jobs:
     steps:
       # Install SFDX
       - name: Install SFDX
-      uses: sfdx-actions/setup-sfdx@v1
+        uses: sfdx-actions/setup-sfdx@v1
 
       # Checkout the code in the pull request
       - name: "Checkout source code"
