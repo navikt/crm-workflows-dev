@@ -77,5 +77,5 @@ jobs:
 
       # Delete scratch orgs
       - name: "Delete scratch org"
-        if: failure() || success()
+        if: always()
         run: "sfdx force:org:delete -p -u scratch-org"
