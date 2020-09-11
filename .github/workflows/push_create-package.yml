@@ -79,6 +79,12 @@ jobs:
           then
             echo "::set-output name=isSuccess::true"
           else
+            echo test
+            echo test
+            echo test
+            echo test
+            echo test
+            echo test
             exit 125
           fi
           rm output
