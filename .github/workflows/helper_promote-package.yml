@@ -1,4 +1,4 @@
-name: "[Helper] Promote Package"
+name: "[HELPER] Promote Package"
 on:
   workflow_dispatch:
     inputs:
