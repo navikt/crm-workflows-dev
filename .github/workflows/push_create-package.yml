@@ -145,9 +145,9 @@ jobs:
         id: secretChecker
         run: |
           if ["$MY_SECRET" == ""]; then
-            echo "::set-output name=shouldContinue::false"
             echo "Code coverage secrets does NOT exist for this repo, aborting"
           else
+            # echo "::set-output name=shouldContinue::true"
             echo "Code coverage secrets exists for this repo, so process continues"
           fi
         env:
