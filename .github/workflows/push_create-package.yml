@@ -181,16 +181,14 @@ jobs:
           status=$(cat output |jq '.status')
           if [ $status == "0" ]
           then
-            echo "::set-output name=isSuccess::1"
-          else
-            echo "::set-output name=isSuccess::0"
+            echo "::set-output name=isSuccess::true"
           fi
           rm output
 
       # Install sfpowerkit plugin used to install multiple packages only by version number
       - name: "Install sfpowerkit plugin"
         if: steps.secretChecker.outputs.shouldContinue
-        run: "echo y | sfdx plugins:install sfpowerkit"
+        run: "echo y | sfdx plugidns:install sfpowerkit"
 
       # Get package keys
       - name: "Get package keys"
