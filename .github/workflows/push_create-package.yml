@@ -144,14 +144,12 @@ jobs:
       - name: Check if secret for code coverage exists
         id: secretChecker
         run: |
-          if ["$MY_SECRET" == ""]; then
+          if ["${{ secrets.CODECOV_TOKEN }}" == ""]; then
             echo "Code coverage secrets does NOT exist for this repo, aborting"
           else
             echo "::set-output name=shouldContinue::true"
             echo "Code coverage secrets exists for this repo, so process continues"
           fi
-        env:
-          MY_SECRET: ${{ secrets.CODECOV_TOKEN }}
 
       # Install SFDX
       - name: Install SFDX
@@ -195,7 +193,6 @@ jobs:
         if: steps.secretChecker.outputs.shouldContinue
         id: install-keys
         run: |
-          exit 125
           keys=""
           for p in $(jq '.result | .[].Name' -r <<< "$(sfdx force:package:list --json)"); do
               keys+=$p":${{ secrets.PACKAGE_KEY }} "
