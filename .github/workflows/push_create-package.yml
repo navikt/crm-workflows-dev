@@ -147,7 +147,7 @@ jobs:
           if ["$MY_SECRET" == ""]; then
             echo "Code coverage secrets does NOT exist for this repo, aborting"
           else
-            # echo "::set-output name=shouldContinue::true"
+            echo "::set-output name=shouldContinue::true"
             echo "Code coverage secrets exists for this repo, so process continues"
           fi
         env:
@@ -238,5 +238,5 @@ jobs:
 
       # Housekeeping
       - name: "Delete scratch org"
-        if: steps.secretChecker.outputs.shouldContinue || steps.createScratchOrg.outputs.isSuccess
+        if: steps.createScratchOrg.outputs.isSuccess
         run: "sfdx force:org:delete -p -u scratch-org"
