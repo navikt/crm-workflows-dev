@@ -56,8 +56,6 @@ jobs:
           if [ $status == "0" ]
           then
             echo "::set-output name=isSuccess::true"
-          else
-            exit 125
           fi
           rm output
 
@@ -78,14 +76,6 @@ jobs:
           if [ $status == "0" ]
           then
             echo "::set-output name=isSuccess::true"
-          else
-            echo test
-            echo test
-            echo test
-            echo test
-            echo test
-            echo test
-            exit 125
           fi
           rm output
 
@@ -155,7 +145,6 @@ jobs:
           else
             echo "::set-output name=shouldContinue::true"
             echo "Code coverage secrets exists for this repo, so process continues"
-            exit 125
           fi
 
       # Install SFDX
@@ -187,8 +176,6 @@ jobs:
           if [ $status == "0" ]
           then
             echo "::set-output name=isSuccess::true"
-          else
-            exit 125
           fi
           rm output
 
