@@ -135,7 +135,7 @@ jobs:
           prerelease: true
 
   check-code-coverage-secret:
-    name: Check valid code coverage secret
+    name: Check valid CODECOV_TOKEN
     runs-on: ubuntu-latest
     steps:
       - name: check secret
@@ -151,7 +151,7 @@ jobs:
   check-code-coverage:
     name: Check Code Coverage
     needs: [check-code-coverage-secret]
-    if: needs.check-code-coverage-secret.outputs.codecoveragesecretexists == ${{ true }}
+    if: ${{ needs.check-code-coverage-secret.outputs.codecoveragesecretexists == true }}
     runs-on: ubuntu-latest
     steps:
       # Install SFDX
