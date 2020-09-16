@@ -137,8 +137,6 @@ jobs:
   check-code-coverage-secret:
     name: Check valid code coverage secret
     runs-on: ubuntu-latest
-    outputs:
-      checkcodecoverage: ${{ steps.check.outputs.codecoverage }}
     steps:
       - name: check secret
         id: check
@@ -147,6 +145,8 @@ jobs:
           echo "::set-output name=checkcodecoverage::${{ env.CODE_COVERAGE_SECRET != '' }}"
         env:
           CODE_COVERAGE_SECRET: ${{ secrets.CODECOV_TOKEN }}
+    outputs:
+      checkcodecoverage: ${{ steps.check.outputs.codecoverage }}
 
   check-code-coverage:
     name: Check Code Coverage
