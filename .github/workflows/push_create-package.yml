@@ -135,7 +135,7 @@ jobs:
   check-code-coverage-secret:
     name: Check valid code coverage secret
     runs-on: ubuntu-latest
-    output:
+    outputs:
       checkcodecoverage: ${{ steps.check.outputs.codecoverage }}
     steps:
       - name: check secret
