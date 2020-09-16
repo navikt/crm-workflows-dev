@@ -132,23 +132,40 @@ jobs:
           draft: false
           prerelease: true
 
+  check-code-coverage-secret:
+    name: Check valid code coverage secret
+    runs-on: ubuntu-latest
+    outout:
+      checkcodecoverage: ${{ steps.check.outputs.codecoverage }}
+    steps:
+      - name: check secret
+        id: check
+        run: |
+          if ["${{ secrets.CODECOV_TOKEN }}" != ""]; then
+            echo "::set-output name=codecoverage::${{ env.CODE_COVERAGE_SECRET != '' }}"
+            echo "Code coverage secrets exists for this repo, so process continues"
+          else
+            echo "Code coverage secrets does NOT exist for this repo, aborting"
+          fi
+        env:
+          CODE_COVERAGE_SECRET: ${{ secrets.CODECOV_TOKEN }}
+
   check-code-coverage:
     name: Check Code Coverage
+    needs: [check-code-coverage-secret]
+    if: needs.check-code-coverage-secret.outputs.checkcodecoverage == 'true'
     runs-on: ubuntu-latest
     steps:
       # Install SFDX
       - name: Install SFDX
-        if: ${{ env.CODECOV_TOKEN != 0 }}
         uses: sfdx-actions/setup-sfdx@v1
 
       # Checkout the code in the pull request
       - name: "Checkout source code"
-        if: ${{ env.CODECOV_TOKEN != 0 }}
         uses: actions/checkout@v2
 
       # Authenticate prod
       - name: Authenticate prod
-        if: ${{ env.CODECOV_TOKEN != 0 }}
         run: |
           echo ${{ secrets.PROD_SFDX_URL}} > ./PROD_SFDX_URL.txt
           sfdx force:auth:sfdxurl:store -f ./PROD_SFDX_URL.txt -a devhub -d
@@ -156,7 +173,6 @@ jobs:
 
       # Create scratch org
       - name: "Create scratch org"
-        if: ${{ env.CODECOV_TOKEN != 0 }}
         id: createScratchOrg
         run: |
           sfdx force:org:create -f config/project-scratch-def.json -a scratch-org -s -d 1 --json | tee output
@@ -172,12 +188,10 @@ jobs:
 
       # Install sfpowerkit plugin used to install multiple packages only by version number
       - name: "Install sfpowerkit plugin"
-        if: ${{ env.CODECOV_TOKEN != 0 }}
         run: "echo y | sfdx plugins:install sfpowerkit"
 
       # Get package keys
       - name: "Get package keys"
-        if: ${{ env.CODECOV_TOKEN != 0 }}
         id: install-keys
         run: |
           keys=""
@@ -189,36 +203,30 @@ jobs:
 
       # Install packages this repo is dependant on
       - name: "Install dependant packages"
-        if: ${{ env.CODECOV_TOKEN != 0 }}
         run: "sfdx sfpowerkit:package:dependencies:install -u scratch-org -r -a -w 60 -k '${{ steps.install-keys.outputs.keys }}'"
 
       # Deploy source to scratch org
       - name: "Push source to scratch org"
-        if: ${{ env.CODECOV_TOKEN != 0 }}
         run: "sfdx force:source:push"
 
       # Sleep for 1 minute while permset groups are updating
       - name: Sleep for 1 minute while permset groups are updating
-        if: ${{ env.CODECOV_TOKEN != 0 }}
         uses: jakejarvis/wait-action@master
         with:
           time: "1m"
 
       # Run Apex tests in scratch org
       - name: "Run Apex tests"
-        if: ${{ env.CODECOV_TOKEN != 0 }}
         run: "sfdx force:apex:test:run -c -r human -d ./tests/apex -w 20"
 
       # Upload code coverage data
       - name: "Upload code coverage for Apex to Codecov.io"
-        if: ${{ env.CODECOV_TOKEN != 0 }}
         uses: codecov/codecov-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
 
       # Remove test result files
       - name: "Remove test result files"
-        if: ${{ env.CODECOV_TOKEN != 0 }}
         run: rm -rf ./tests
 
       # Housekeeping
