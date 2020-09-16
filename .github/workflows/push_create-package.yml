@@ -139,19 +139,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: check secret
-        id: check
+        id: codecoveragesecretexists
         run: |
           echo "Enable code coverage check: ${{ env.CODE_COVERAGE_SECRET != '' }}"
-          echo "::set-output name=checkcodecoverage::${{ env.CODE_COVERAGE_SECRET != '' }}"
+          echo "::set-output name=codecoveragesecretexists::${{ env.CODE_COVERAGE_SECRET != '' }}"
         env:
           CODE_COVERAGE_SECRET: ${{ secrets.CODECOV_TOKEN }}
     outputs:
-      checkcodecoverage: ${{ steps.check.outputs.codecoverage }}
+      codecoveragesecretexists: ${{ steps.codecoveragesecretexists.outputs.codecoveragesecretexists }}
 
   check-code-coverage:
     name: Check Code Coverage
     needs: [check-code-coverage-secret]
-    if: needs.check-code-coverage-secret.outputs.checkcodecoverage
+    if: needs.check-code-coverage-secret.outputs.codecoveragesecretexists == ${{ true }}
     runs-on: ubuntu-latest
     steps:
       # Install SFDX
