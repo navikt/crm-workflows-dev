@@ -128,9 +128,9 @@ jobs:
           body: |
             **Version**: ${{ steps.release-fields.outputs.bodyVersion }}
             **Package ID**: ${{ steps.release-fields.outputs.bodyPackage }}
-            **Author**: ${{ github.actor }}
-
             **Code Coverage**: ${{ steps.release-fields.outputs.codeCoverage }}%
+
+            **Author**: ${{ github.actor }}
 
             ${{ steps.release-fields.outputs.packageCreation }}
             ${{ steps.release-fields.outputs.integrationInstallation }}
