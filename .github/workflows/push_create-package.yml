@@ -130,7 +130,7 @@ jobs:
             **Package ID**: ${{ steps.release-fields.outputs.bodyPackage }}
             **Author**: ${{ github.actor }}
 
-            **Code Coverage**: ${{ steps.release-fields.outputs.codeCoverage }}
+            **Code Coverage**: ${{ steps.release-fields.outputs.codeCoverage }}%
 
             ${{ steps.release-fields.outputs.packageCreation }}
             ${{ steps.release-fields.outputs.integrationInstallation }}
@@ -291,7 +291,7 @@ jobs:
         run: |
           classes=""
           for p in $( grep -r -l -i --include="*.cls" "@istest" . | sed 's@.*/@@' ); do
-            classes+=$p","
+            classes+=$(echo $p | cut -f 1 -d '.')","
           done
 
           echo "::set-output name=classes::$( echo $classes | sed 's/\(.*\),/\1 /' )"
