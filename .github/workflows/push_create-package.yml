@@ -143,7 +143,7 @@ jobs:
   # ####### CHECK DEV SANDBOX DEPLOY ####### #
   # ######################################## #
   check-dev-sandbox-deploy:
-    name: Check valid DEPLOY_TO_DEV_AFTER_PACKAGE_CREATION
+    name: Check if DEPLOY_TO_DEV_AFTER_PACKAGE_CREATION is true
     runs-on: ubuntu-latest
     steps:
       - name: check DEPLOY_TO_DEV_AFTER_PACKAGE_CREATION secret
@@ -160,6 +160,7 @@ jobs:
   # ######## DEPLOY PACKAGE TO DEV ######### #
   # ######################################## #
   deploy-package-to-dev:
+    name: Deploy package to dev sandbox
     runs-on: ubuntu-latest
     needs: [create-package]
     # if: ${{ secrets.DEPLOY_TO_DEV_AFTER_PACKAGE_CREATION == 'true' }}
