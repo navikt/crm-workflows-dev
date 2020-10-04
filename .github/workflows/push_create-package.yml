@@ -149,8 +149,8 @@ jobs:
       - name: check DEPLOY_TO_DEV_AFTER_PACKAGE_CREATION secret
         id: checkSecret
         run: |
-          echo "Enable code coverage check: ${{ env.SECRET == 'true' }}"
-          echo "::set-output name=shouldContinue::${{ env.SECRET != '' }}"
+          echo "Enable: ${{ env.SECRET == 'true' }}"
+          echo "::set-output name=shouldContinue::${{ env.SECRET == 'true' }}"
         env:
           SECRET: ${{ secrets.DEPLOY_TO_DEV_AFTER_PACKAGE_CREATION }}
     outputs:
@@ -187,7 +187,7 @@ jobs:
       - name: check CODECOV_TOKEN secret 
         id: checkSecret
         run: |
-          echo "Enable code coverage check: ${{ env.SECRET != '' }}"
+          echo "Enable: ${{ env.SECRET != '' }}"
           echo "::set-output name=shouldContinue::${{ env.SECRET != '' }}"
         env:
           SECRET: ${{ secrets.CODECOV_TOKEN }}
