@@ -37,7 +37,7 @@ jobs:
           rm -f ./PROD_SFDX_URL.txt
 
       # Authenticate integration-sandbox
-      - name: Authenticate prod
+      - name: Authenticate integration-sandbox
         run: |
           echo ${{ secrets.INTEGRATION_SANDBOX_SFDX_URL}} > ./INTEGRATION_SANDBOX_SFDX_URL.txt
           sfdx force:auth:sfdxurl:store -f ./INTEGRATION_SANDBOX_SFDX_URL.txt -a integration-sandbox -s
