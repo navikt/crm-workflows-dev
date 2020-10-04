@@ -149,8 +149,8 @@ jobs:
       - name: check DEPLOY_TO_DEV_AFTER_PACKAGE_CREATION secret
         id: checkSecret
         run: |
-          echo "Enable: ${{ env.SECRET == '1' || env.SECRET == 'true' }}"
-          echo "::set-output name=shouldContinue::${{ env.SECRET == '1' || env.SECRET == 'true' }}"
+          echo "Enable: ${{ env.SECRET == '1' }}"
+          echo "::set-output name=shouldContinue::${{ env.SECRET == '1' }}"
         env:
           SECRET: ${{ secrets.DEPLOY_TO_DEV_AFTER_PACKAGE_CREATION }}
     outputs:
