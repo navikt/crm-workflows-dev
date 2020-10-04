@@ -152,7 +152,7 @@ jobs:
             **Author**: ${{ github.actor }}
             **Comment**: ${{ github.event.inputs.comment }}
 
-            **Code Coverage**: ${{ steps.release-fields.outputs.codeCoverage }}
+            **Code Coverage**: ${{ steps.release-fields.outputs.codeCoverage }}%
 
             ## Changelog
 
