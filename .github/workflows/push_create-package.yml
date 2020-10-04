@@ -285,9 +285,20 @@ jobs:
         with:
           time: "1m"
 
+      # Get all test classes from current repo
+      - name: Get all test classes from currentrepo
+        id: test-classes-in-repo
+        run: |
+          classes=""
+          for p in $( grep -r -l -i --include="*.cls" "@istest" . | sed 's@.*/@@' ); do
+            classes+=$p","
+          done
+
+          echo "::set-output name=classes::$( echo $classes | sed 's/\(.*\),/\1 /' )"
+
       # Run Apex tests in scratch org
       - name: "Run Apex tests"
-        run: "sfdx force:apex:test:run -l RunLocalTests -c -r human -d ./tests/apex -w 20"
+        run: "sfdx force:apex:test:run -t ${{ steps.test-classes-in-repo.outputs.classes }} -c -r human -d ./tests/apex -w 20"
 
       # Upload code coverage data
       - name: "Upload code coverage for Apex to Codecov.io"
