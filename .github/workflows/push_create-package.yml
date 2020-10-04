@@ -229,7 +229,7 @@ jobs:
   # ######################################## #
   check-code-coverage:
     name: Check Code Coverage
-    needs: [create-package, check-code-coverage-secret]
+    needs: [check-code-coverage-secret]
     if: ${{ needs.check-code-coverage-secret.outputs.shouldContinue == 'true' }}
     runs-on: ubuntu-latest
     steps:
