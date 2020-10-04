@@ -173,8 +173,7 @@ jobs:
 
       # Install package in dev sandbox
       - name: "Install package in dev sandbox org"
-        # run: "sfdx force:package:install --package ${{ needs.create-package.outputs.packageVersionId }} -k ${{ secrets.PACKAGE_KEY }} -w 10 -b 10 -r"
-        run: "sfdx force:package:install --package 04t2o000000yPZGAA2 -k ${{ secrets.PACKAGE_KEY }} -w 10 -b 10 -r"
+        run: "sfdx force:package:install --package ${{ needs.create-package.outputs.packageVersionId }} -k ${{ secrets.PACKAGE_KEY }} -w 10 -b 10 -r"
 
   # ######################################## #
   # ###### CHECK CODE COVERAGE SECRET ###### #
