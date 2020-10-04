@@ -130,7 +130,7 @@ jobs:
             **Package ID**: ${{ steps.release-fields.outputs.bodyPackage }}
             **Author**: ${{ github.actor }}
 
-            **Code Coverage**: ${{ steps.release-fields.outputs.codeCoverage }}
+            **Code Coverage**: ${{ steps.release-fields.outputs.codeCoverage }}%
 
             ${{ steps.release-fields.outputs.packageCreation }}
             ${{ steps.release-fields.outputs.integrationInstallation }}
