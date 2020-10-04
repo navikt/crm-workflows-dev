@@ -97,8 +97,7 @@ jobs:
           echo "::set-output name=releaseName::$(echo $versionNumber)-beta$(echo $packageAliases)"
           echo "::set-output name=bodyVersion::$(echo $versionNumber).$(echo $packageAliases)"
           echo "::set-output name=bodyPackage::${{ steps.extract-data-package-version-create.outputs.packageVersionId }}"
-          
-          echo "::set-output name=codeCoverage::$( sfdx force:package:version:report -p 04t2o000000yPp9AAE --json | jq '.result.CodeCoverage.apexCodeCoveragePercentage' -r )"
+          echo "::set-output name=codeCoverage::$( sfdx force:package:version:report -p ${{ steps.extract-data-package-version-create.outputs.packageVersionId }} --json | jq '.result.CodeCoverage.apexCodeCoveragePercentage' -r )"
 
           echo "::set-output name=packageCreation::✅ Package Creation"
 

@@ -127,6 +127,8 @@ jobs:
           echo "::set-output name=tagName::v$(cat sfdx-project.json | jq '.packageDirectories[0].versionNumber' -r | sed 's/.\{5\}$//')"
           echo "::set-output name=releaseName::$(cat sfdx-project.json | jq '.packageDirectories[0].versionNumber' -r | sed 's/.\{5\}$//')"
           echo "::set-output name=bodyVersion::$(cat sfdx-project.json | jq '.packageDirectories[0].versionNumber' -r | sed 's/.\{5\}$//')"
+          echo "::set-output name=codeCoverage::$( sfdx force:package:version:report -p ${{ github.event.inputs.packageId }} --json | jq '.result.CodeCoverage.apexCodeCoveragePercentage' -r )"
+
 
       # Generate changelog from commits
       - name: Generate changelog
@@ -146,8 +148,11 @@ jobs:
           body: |
             **Version**: ${{ steps.release-fields.outputs.bodyVersion }}
             **Package ID**: ${{ github.event.inputs.packageId }}
+            
             **Author**: ${{ github.actor }}
             **Comment**: ${{ github.event.inputs.comment }}
+
+            **Code Coverage**: ${{ steps.release-fields.outputs.codeCoverage }}
 
             ## Changelog
 
