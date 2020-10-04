@@ -79,6 +79,7 @@ jobs:
           echo "::set-output name=classes::$( echo $classes | sed 's/\(.*\),/\1 /' )"
 
       # Run Apex tests in scratch org
+      # TODO throw error on below 75% code coverage
       - name: "Run Apex tests"
         run: "sfdx force:apex:test:run -t ${{ steps.test-classes-in-repo.outputs.classes }} -c -r human -d ./tests/apex -w 20"
 
