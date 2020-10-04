@@ -169,6 +169,10 @@ jobs:
       - name: Authorize SFDX
         uses: sfdx-actions/setup-sfdx@v1
 
+      # Checkout the code in the pull request
+      - name: "Checkout source code"
+        uses: actions/checkout@v2
+
       # Authenticate prod
       - name: Authenticate prod
         run: |
