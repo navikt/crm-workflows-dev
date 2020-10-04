@@ -139,22 +139,22 @@ jobs:
       #     draft: false
       #     prerelease: true
 
-  # # ######################################## #
-  # # ####### CHECK DEV SANDBOX DEPLOY ####### #
-  # # ######################################## #
-  # check-dev-sandbox-deploy:
-  #   name: Check valid DEPLOY_TO_DEV_AFTER_PACKAGE_CREATION
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: check DEPLOY_TO_DEV_AFTER_PACKAGE_CREATION secret
-  #       id: checkSecret
-  #       run: |
-  #         echo "Enable code coverage check: ${{ env.SECRET == 'true' }}"
-  #         echo "::set-output name=shouldContinue::${{ env.SECRET != '' }}"
-  #       env:
-  #         SECRET: ${{ secrets.DEPLOY_TO_DEV_AFTER_PACKAGE_CREATION }}
-  #   outputs:
-  #     shouldContinue: ${{ steps.checkSecret.outputs.shouldContinue }}
+  # ######################################## #
+  # ####### CHECK DEV SANDBOX DEPLOY ####### #
+  # ######################################## #
+  check-dev-sandbox-deploy:
+    name: Check valid DEPLOY_TO_DEV_AFTER_PACKAGE_CREATION
+    runs-on: ubuntu-latest
+    steps:
+      - name: check DEPLOY_TO_DEV_AFTER_PACKAGE_CREATION secret
+        id: checkSecret
+        run: |
+          echo "Enable code coverage check: ${{ env.SECRET == 'true' }}"
+          echo "::set-output name=shouldContinue::${{ env.SECRET != '' }}"
+        env:
+          SECRET: ${{ secrets.DEPLOY_TO_DEV_AFTER_PACKAGE_CREATION }}
+    outputs:
+      shouldContinue: ${{ steps.checkSecret.outputs.shouldContinue }}
 
   # ######################################## #
   # ######## DEPLOY PACKAGE TO DEV ######### #
@@ -162,8 +162,8 @@ jobs:
   deploy-package-to-dev:
     runs-on: ubuntu-latest
     needs: [create-package]
-    if: ${{ secrets.DEPLOY_TO_DEV_AFTER_PACKAGE_CREATION == 'true' }}
-    # if: ${{ needs.check-dev-sandbox-deploy.outputs.shouldContinue == 'true' }}
+    # if: ${{ secrets.DEPLOY_TO_DEV_AFTER_PACKAGE_CREATION == 'true' }}
+    if: ${{ needs.check-dev-sandbox-deploy.outputs.shouldContinue == 'true' }}
     steps:
       # Authorize SFDX
       - name: Authorize SFDX
