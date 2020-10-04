@@ -12,6 +12,9 @@
     "sfdcLoginUrl": "https://login.salesforce.com",
     "sourceApiVersion": "47.0",
     "packageAliases": {
-        "crm-workflows-dev": "0Ho2o000000Kym5CAC"
+        "crm-workflows-dev": "0Ho2o000000Kym5CAC",
+        "crm-workflows-dev@0.9.0-17": "04t2o000000yPouAAE",
+        "crm-workflows-dev@0.9.0-19": "04t2o000000yPp4AAE",
+        "crm-workflows-dev@0.9.0-20": "04t2o000000yPp9AAE"
     }
 }
