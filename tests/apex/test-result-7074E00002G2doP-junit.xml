@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+    <testsuite name="force.apex" timestamp="2020-10-20T15:59:44+02:00" hostname="https://force-customization-6076.cs83.my.salesforce.com/" tests="2" failures="0"  errors="0"  time="0.03">
+        <properties>
+            <property name="outcome" value="Passed"/>
+            <property name="testsRan" value="2"/>
+            <property name="passing" value="2"/>
+            <property name="failing" value="0"/>
+            <property name="skipped" value="0"/>
+            <property name="passRate" value="100%"/>
+            <property name="failRate" value="0%"/>
+            <property name="testStartTime" value="Oct 20, 2020 3:59 PM"/>
+            <property name="testExecutionTime" value="0.03 s"/>
+            <property name="testTotalTime" value="0.03 s"/>
+            <property name="commandTime" value="17.81 s"/>
+            <property name="hostname" value="https://force-customization-6076.cs83.my.salesforce.com/"/>
+            <property name="orgId" value="00D4E0000004gS4UAI"/>
+            <property name="username" value="test-hau3i84e6nms@example.com"/>
+            <property name="testRunId" value="7074E00002G2doP"/>
+            <property name="userId" value="0054E000006RH9fQAG"/>
+            <property name="testRunCoverage" value="100%"/>
+            <property name="orgWideCoverage" value="50%"/>
+        </properties>
+        <testcase name="testFunction" classname="MyTestClassTest" time="0.02">
+        </testcase>
+        <testcase name="testFunction" classname="testclass2test" time="0.01">
+        </testcase>
+    </testsuite>
+</testsuites>

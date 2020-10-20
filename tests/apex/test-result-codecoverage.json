@@ -1,0 +1,13 @@
+[
+    {
+        "id": "01p4E000002kvbVQAQ",
+        "name": "MyTestClass",
+        "totalLines": 2,
+        "lines": {
+            "2": 1,
+            "4": 1
+        },
+        "totalCovered": 2,
+        "coveredPercent": 100
+    }
+]

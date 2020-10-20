@@ -1,0 +1,127 @@
+{
+    "summary": {
+        "outcome": "Passed",
+        "testsRan": 2,
+        "passing": 2,
+        "failing": 0,
+        "skipped": 0,
+        "passRate": "100%",
+        "failRate": "0%",
+        "testStartTime": "Oct 20, 2020 3:59 PM",
+        "testExecutionTime": "34 ms",
+        "testTotalTime": "34 ms",
+        "commandTime": "17805 ms",
+        "hostname": "https://force-customization-6076.cs83.my.salesforce.com/",
+        "orgId": "00D4E0000004gS4UAI",
+        "username": "test-hau3i84e6nms@example.com",
+        "testRunId": "7074E00002G2doP",
+        "userId": "0054E000006RH9fQAG",
+        "testRunCoverage": "100%",
+        "orgWideCoverage": "50%"
+    },
+    "tests": [
+        {
+            "attributes": {
+                "type": "ApexTestResult",
+                "url": "/services/data/v49.0/tooling/sobjects/ApexTestResult/07M4E00000CB8saUAD"
+            },
+            "Id": "07M4E00000CB8saUAD",
+            "QueueItemId": "7094E000001tNosQAE",
+            "StackTrace": null,
+            "Message": null,
+            "AsyncApexJobId": "7074E00002G2doPQAR",
+            "MethodName": "testFunction",
+            "Outcome": "Pass",
+            "ApexClass": {
+                "attributes": {
+                    "type": "ApexClass",
+                    "url": "/services/data/v49.0/tooling/sobjects/ApexClass/01p4E000002kvbWQAQ"
+                },
+                "Id": "01p4E000002kvbWQAQ",
+                "Name": "MyTestClassTest",
+                "NamespacePrefix": null
+            },
+            "RunTime": 21,
+            "FullName": "MyTestClassTest.testFunction"
+        },
+        {
+            "attributes": {
+                "type": "ApexTestResult",
+                "url": "/services/data/v49.0/tooling/sobjects/ApexTestResult/07M4E00000CB8sVUAT"
+            },
+            "Id": "07M4E00000CB8sVUAT",
+            "QueueItemId": "7094E000001tNorQAE",
+            "StackTrace": null,
+            "Message": null,
+            "AsyncApexJobId": "7074E00002G2doPQAR",
+            "MethodName": "testFunction",
+            "Outcome": "Pass",
+            "ApexClass": {
+                "attributes": {
+                    "type": "ApexClass",
+                    "url": "/services/data/v49.0/tooling/sobjects/ApexClass/01p4E000002kw7GQAQ"
+                },
+                "Id": "01p4E000002kw7GQAQ",
+                "Name": "testclass2test",
+                "NamespacePrefix": null
+            },
+            "RunTime": 13,
+            "FullName": "testclass2test.testFunction"
+        }
+    ],
+    "coverage": {
+        "coverage": [
+            {
+                "id": "01p4E000002kvbVQAQ",
+                "name": "MyTestClass",
+                "totalLines": 2,
+                "lines": {
+                    "2": 1,
+                    "4": 1
+                },
+                "totalCovered": 2,
+                "coveredPercent": 100
+            }
+        ],
+        "records": [
+            {
+                "attributes": {
+                    "type": "ApexCodeCoverage",
+                    "url": "/services/data/v49.0/tooling/sobjects/ApexCodeCoverage/7144E00001vpSbrQAE"
+                },
+                "ApexTestClass": {
+                    "attributes": {
+                        "type": "ApexClass",
+                        "url": "/services/data/v49.0/tooling/sobjects/ApexClass/01p4E000002kvbWQAQ"
+                    },
+                    "Id": "01p4E000002kvbWQAQ",
+                    "Name": "MyTestClassTest"
+                },
+                "Coverage": {
+                    "coveredLines": [
+                        2,
+                        4
+                    ],
+                    "uncoveredLines": []
+                },
+                "TestMethodName": "testFunction",
+                "NumLinesCovered": 2,
+                "ApexClassOrTrigger": {
+                    "attributes": {
+                        "type": "Name",
+                        "url": "/services/data/v49.0/tooling/sobjects/ApexClass/01p4E000002kvbVQAQ"
+                    },
+                    "Id": "01p4E000002kvbVQAQ",
+                    "Name": "MyTestClass"
+                },
+                "NumLinesUncovered": 0
+            }
+        ],
+        "summary": {
+            "totalLines": 2,
+            "coveredLines": 2,
+            "testRunCoverage": "100%",
+            "orgWideCoverage": "50%"
+        }
+    }
+}
