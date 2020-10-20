@@ -74,7 +74,7 @@ jobs:
       - name: "Set scratch org auth URL"
         id: set-auth-url
         run: |
-          authurl=$(sfdx force:org:display -u test --verbose --json | jq '.result.sfdxAuthUrl' | sed 's/\"//g')
+          authurl=$(sfdx force:org:display -u scratch-org --verbose --json | jq '.result.sfdxAuthUrl' | sed 's/\"//g')
           echo "::set-output name=authurl::$(echo $authurl)"
 
   # ######################################## #
