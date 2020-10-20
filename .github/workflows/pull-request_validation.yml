@@ -25,18 +25,12 @@ jobs:
       - name: "Checkout source code"
         uses: actions/checkout@v2
 
-      # Store secret for dev hub
-      - name: "Populate auth file with PROD_SFDX_URL secret"
-        shell: bash
-        run: "echo ${{ secrets.PROD_SFDX_URL}} > ./PROD_SFDX_URL.txt"
-
       # Authenticate dev hub
       - name: "Authenticate Dev Hub"
-        run: "sfdx force:auth:sfdxurl:store -f ./PROD_SFDX_URL.txt -a devhub -d"
-
-      # Remove auth files
-      - name: "Remove auth files"
-        run: "rm -f ./PROD_SFDX_URL.txt"
+        run: |
+          echo ${{ secrets.PROD_SFDX_URL}} > ./PROD_SFDX_URL.txt
+          sfdx force:auth:sfdxurl:store -f ./PROD_SFDX_URL.txt -a devhub -d
+          rm -f ./PROD_SFDX_URL.txt
 
       # Create scratch org
       - name: "Create scratch org"
@@ -95,18 +89,13 @@ jobs:
       - name: "Checkout source code"
         uses: actions/checkout@v2
 
-      # Store secret for scratch org
-      - name: "Populate auth file with SCRATCH_ORG_SFDX_URL"
-        shell: bash
-        run: "echo ${{ needs.compile.outputs.authurl }} > ./SCRATCH_ORG_SFDX_URL.txt"
-
       # Authenticate scratch org
-      - name: "Authenticate Dev Hub"
-        run: "sfdx force:auth:sfdxurl:store -f ./SCRATCH_ORG_SFDX_URL.txt -a scratch-org -s"
-
-      # Remove auth files
-      - name: "Remove auth files"
-        run: "rm -f ./SCRATCH_ORG_SFDX_URL.txt"
+      - name: "Authenticate scratch org"
+        run: |
+          authurl=${{ needs.compile.outputs.authurl }}
+          echo $authurl > ./SCRATCH_ORG_SFDX_URL.txt
+          sfdx force:auth:sfdxurl:store -f ./SCRATCH_ORG_SFDX_URL.txt -a scratch-org -s
+          rm -f ./SCRATCH_ORG_SFDX_URL.txt
 
       # Get all test classes from current repo
       - name: Get all test classes from current repo
