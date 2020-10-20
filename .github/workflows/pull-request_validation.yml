@@ -12,7 +12,7 @@ jobs:
   # ############### COMPILE ################ #
   # ######################################## #
   compile:
-    name: Compile
+    name: Compile Metadata
     outputs:
       authurl: ${{ steps.set-auth-url.outputs.authurl }}
     runs-on: ubuntu-latest
@@ -74,14 +74,14 @@ jobs:
       - name: "Set scratch org auth URL"
         id: set-auth-url
         run: |
-          authurl=$(sfdx force:org:display -u test --verbose --json | jq '.result.sfdxAuthUrl' | sed 's/\"//g')
+          authurl=$(sfdx force:org:display -u scratch-org --verbose --json | jq '.result.sfdxAuthUrl' | sed 's/\"//g')
           echo "::set-output name=authurl::$(echo $authurl)"
 
   # ######################################## #
   # ############### RUN TESTS ############## #
   # ######################################## #
   run-tests:
-    name: Run Tests
+    name: Run Apex Tests
     needs: [compile]
     outputs:
       codecoverage: ${{ steps.code-coverage-percentage.outputs.codecoverage }}
@@ -139,7 +139,7 @@ jobs:
   # ########## CHECK CODE COVERAGE ######### #
   # ######################################## #
   check-code-coverage:
-    name: Validate 85% code coverage
+    name: Validate 85% Code Coverage
     needs: [run-tests]
     runs-on: ubuntu-latest
     steps:
