@@ -14,7 +14,7 @@ jobs:
   compile:
     name: Compile
     outputs:
-      scratch-org-auth-url: ${{ steps.set-auth-url.outputs.authurl }}
+      authurl: ${{ steps.set-auth-url.outputs.authurl }}
     runs-on: ubuntu-latest
     steps:
       # Install SFDX
@@ -98,7 +98,7 @@ jobs:
       # Store secret for scratch org
       - name: "Populate auth file with SCRATCH_ORG_SFDX_URL"
         shell: bash
-        run: "echo ${{ needs.compile.outputs.scratch-org-auth-url }} > ./SCRATCH_ORG_SFDX_URL.txt"
+        run: "echo ${{ needs.compile.outputs.authurl }} > ./SCRATCH_ORG_SFDX_URL.txt"
 
       # Authenticate scratch org
       - name: "Authenticate Dev Hub"
