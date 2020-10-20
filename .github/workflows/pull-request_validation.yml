@@ -79,7 +79,7 @@ jobs:
       - name: Validate at least 85% code coverage
         run:
           codecoverage=$(cat tests/apex/test-result-7*.json | jq '.summary.orgWideCoverage' | sed 's/\"//g; s/\%//g')
-          if [ $codecoverage -lt 85 ]
+          if [[ $codecoverage -lt 85 ]]
           then
             echo "Code coverage is $codecoverage%"
             echo "Because it is less than 85%, the validation failed"
