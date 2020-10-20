@@ -9,7 +9,7 @@ on:
 
 jobs:
   # ######################################## #
-  # ############### COMNPILE ############### #
+  # ############### COMPILE ################ #
   # ######################################## #
   compile:
     name: Compile
@@ -102,7 +102,7 @@ jobs:
 
       # Authenticate scratch org
       - name: "Authenticate Dev Hub"
-        run: "sfdx force:auth:sfdxurl:store -f ./SCRATCH_ORG_SFDX_URL.txt -a scratch-org -d"
+        run: "sfdx force:auth:sfdxurl:store -f ./SCRATCH_ORG_SFDX_URL.txt -a scratch-org -s"
 
       # Remove auth files
       - name: "Remove auth files"
