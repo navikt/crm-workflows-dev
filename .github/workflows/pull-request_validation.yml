@@ -12,7 +12,7 @@ jobs:
   # ############### COMPILE ################ #
   # ######################################## #
   compile:
-    name: Compile
+    name: Compile Metadata
     outputs:
       authurl: ${{ steps.set-auth-url.outputs.authurl }}
     runs-on: ubuntu-latest
@@ -81,7 +81,7 @@ jobs:
   # ############### RUN TESTS ############## #
   # ######################################## #
   run-tests:
-    name: Run Tests
+    name: Run Apex Tests
     needs: [compile]
     outputs:
       codecoverage: ${{ steps.code-coverage-percentage.outputs.codecoverage }}
@@ -139,7 +139,7 @@ jobs:
   # ########## CHECK CODE COVERAGE ######### #
   # ######################################## #
   check-code-coverage:
-    name: Validate 85% code coverage
+    name: Validate 85% Code Coverage
     needs: [run-tests]
     runs-on: ubuntu-latest
     steps:
