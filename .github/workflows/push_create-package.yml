@@ -44,7 +44,6 @@ jobs:
           rm -f ./INTEGRATION_SANDBOX_SFDX_URL.txt
 
       # Create package version
-      # TODO throw error on below 75% code coverage
       - name: "Create package version"
         id: package-version-create
         run: |
