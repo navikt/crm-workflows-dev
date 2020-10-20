@@ -13,8 +13,6 @@ jobs:
   # ######################################## #
   compile:
     name: Compile Metadata
-    outputs:
-      authurl: ${{ steps.set-auth-url.outputs.authurl }}
     runs-on: ubuntu-latest
     steps:
       # Install SFDX
@@ -69,7 +67,11 @@ jobs:
         id: set-auth-url
         run: |
           authurl=$(sfdx force:org:display -u scratch-org --verbose --json | jq '.result.sfdxAuthUrl' | sed 's/\"//g')
+          echo $authurl
           echo "::set-output name=authurl::$(echo $authurl)"
+
+    outputs:
+      authurl: ${{ steps.set-auth-url.outputs.authurl }}
 
   # ######################################## #
   # ############### RUN TESTS ############## #
@@ -77,8 +79,6 @@ jobs:
   run-tests:
     name: Run Apex Tests
     needs: [compile]
-    outputs:
-      codecoverage: ${{ steps.code-coverage-percentage.outputs.codecoverage }}
     runs-on: ubuntu-latest
     steps:
       # Install SFDX
@@ -92,6 +92,7 @@ jobs:
       # Authenticate scratch org
       - name: "Authenticate scratch org"
         run: |
+          echo ${{ needs.compile.outputs.authurl }}
           authurl=${{ needs.compile.outputs.authurl }}
           echo $authurl > ./SCRATCH_ORG_SFDX_URL.txt
           sfdx force:auth:sfdxurl:store -f ./SCRATCH_ORG_SFDX_URL.txt -a scratch-org -s
@@ -123,6 +124,9 @@ jobs:
       - name: "Delete scratch org"
         if: always()
         run: "sfdx force:org:delete -p -u scratch-org"
+
+    outputs:
+      codecoverage: ${{ steps.code-coverage-percentage.outputs.codecoverage }}
 
   # ######################################## #
   # ########## CHECK CODE COVERAGE ######### #
