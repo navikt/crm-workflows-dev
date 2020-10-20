@@ -61,7 +61,7 @@ jobs:
         run: "sfdx force:source:push"
 
       # Get all test classes from current repo
-      - name: Get all test classes from currentrepo
+      - name: Get all test classes from current repo
         id: test-classes-in-repo
         run: |
           classes=""
