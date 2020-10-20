@@ -9,7 +9,7 @@ on:
 
 jobs:
   validate:
-    name: Validate Metadata
+    name: Compile & Run Tests
     outputs:
       codecoverage: ${{ steps.code-coverage-percentage.outputs.codecoverage }}
     runs-on: ubuntu-latest
@@ -82,7 +82,7 @@ jobs:
         id: code-coverage-percentage
         run: |
           codecoverage=$(cat tests/apex/test-result-707*.json | jq '.summary.orgWideCoverage' | sed 's/\"//g; s/\%//g')
-          echo "::set-output name=keys::$(echo $codecoverage)"
+          echo "::set-output name=codecoverage::$(echo $codecoverage)"
 
 
       # Delete scratch orgs
@@ -91,7 +91,7 @@ jobs:
         run: "sfdx force:org:delete -p -u scratch-org"
 
   check-code-coverage:
-    name: At least 85% code coverage
+    name: Validate 85% code coverage
     needs: [validate]
     runs-on: ubuntu-latest
     steps:
