@@ -36,6 +36,8 @@ jobs:
         run: sfdx force:org:create -f config/project-scratch-def.json -a scratch-org -s -d 1
 
       # Set SCRATCH_ORG_SFDX_AUTH_URL.txt
+      # ! saves sfdx auth url as artifact to circumvent GitHub Actions censoring of the value (which occurs when used with job output)
+      # ! artifact is later deleted
       - name: "Set SCRATCH_ORG_SFDX_AUTH_URL.txt"
         id: set-auth-url
         run: sfdx force:org:display -u scratch-org --verbose --json | jq '.result.sfdxAuthUrl' | sed 's/\"//g' > SCRATCH_ORG_SFDX_AUTH_URL.txt
@@ -127,15 +129,14 @@ jobs:
           for p in $( grep -r -l -i --include="*.cls" "@istest" . | sed 's@.*/@@' ); do
             classes+=$(echo $p | cut -f 1 -d '.')","
           done
-
           echo "::set-output name=classes::$( echo $classes | sed 's/\(.*\),/\1 /' )"
 
       # Run Apex tests in scratch org
       - name: "Run Apex tests"
         run: "sfdx force:apex:test:run -t ${{ steps.test-classes-in-repo.outputs.classes }} -c -r human -d ./tests/apex -w 20"
 
-      # Upload SFDX AuthUrl
-      - name: Upload SFDX AuthUrl
+      # Upload Apex test results
+      - name: Upload Apex test results
         uses: actions/upload-artifact@v2
         with:
           name: apex-tests
@@ -164,7 +165,6 @@ jobs:
       - name: Validate at least 85% code coverage
         run: |
           codecoverage=$(cat tests/apex/test-result-707*.json | jq '.summary.orgWideCoverage' | sed 's/\"//g; s/\%//g')
-
           if [ $codecoverage -lt 85 ]
           then
             echo "Code coverage is $codecoverage%"
