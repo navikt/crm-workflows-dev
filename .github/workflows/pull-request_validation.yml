@@ -12,8 +12,8 @@ jobs:
   # ######################################## #
   # ############### COMPILE ################ #
   # ######################################## #
-  compile:
-    name: Compile Metadata
+  setup:
+    name: Setup
     runs-on: ubuntu-latest
     steps:
       # Install SFDX
@@ -66,17 +66,39 @@ jobs:
       - name: "Install dependant packages"
         run: "sfdx sfpowerkit:package:dependencies:install -u scratch-org -r -a -w 60 -k '${{ steps.install-keys.outputs.keys }}'"
 
+  compile:
+    name: Compile Metadata
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      # Install SFDX
+      - name: Install SFDX
+        uses: sfdx-actions/setup-sfdx@v1
+
+      # Checkout the code in the pull request
+      - name: "Checkout source code"
+        uses: actions/checkout@v2
+
+      # Download SCRATCH_ORG_SFDX_AUTH_URL.txt
+      - name: Download SCRATCH_ORG_SFDX_AUTH_URL.txt
+        uses: actions/download-artifact@v2
+        with:
+          name: sfdx-auth-url
+
+      # Authenticate scratch org
+      - name: "Authenticate scratch org"
+        run: sfdx force:auth:sfdxurl:store -f ./SCRATCH_ORG_SFDX_AUTH_URL.txt -a scratch-org -s
+
       # Deploy source to scratch org
       - name: "Push source to scratch org"
         run: "sfdx force:source:push"
-
 
   # ######################################## #
   # ############### RUN TESTS ############## #
   # ######################################## #
   run-tests:
     name: Run Apex Tests
-    needs: [compile]
+    needs: compile
     runs-on: ubuntu-latest
     steps:
       # Install SFDX
@@ -124,7 +146,7 @@ jobs:
   # ######################################## #
   check-code-coverage:
     name: Validate 85% Code Coverage
-    needs: [run-tests]
+    needs: run-tests
     runs-on: ubuntu-latest
     steps:
       # Download tests
@@ -144,17 +166,16 @@ jobs:
             echo "Because it is less than 85%, the validation failed"
             exit 125
           fi
- 
+
   # ######################################## #
   # ################ CLEANUP ############### #
   # ######################################## #
   cleanup:
     name: Cleanup
-    needs: [compile, run-tests, check-code-coverage]
+    needs: [setup, compile, run-tests, check-code-coverage]
     if: always()
     runs-on: ubuntu-latest
     steps:
-
       # Install SFDX
       - name: Install SFDX
         uses: sfdx-actions/setup-sfdx@v1
@@ -186,7 +207,7 @@ jobs:
         with:
           name: sfdx-auth-url
 
-     # Delete scratch orgs
+      # Delete scratch orgs
       - name: "Delete scratch org"
         if: always()
         run: "sfdx force:org:delete -p -u scratch-org"
