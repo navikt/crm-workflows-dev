@@ -104,9 +104,9 @@ jobs:
 
       # Delete SFDX AuthUrl from compile job
       - name: Delete SFDX AuthUrl from compile job
-        uses: christian-korneck/delete-run-artifacts-action@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: geekyeggo/delete-artifact@v1
+        with:
+          name: sfdx-auth-url
 
       - name: print2 
         run: |
