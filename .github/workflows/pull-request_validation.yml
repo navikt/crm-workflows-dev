@@ -75,7 +75,7 @@ jobs:
       - name: "Set scratch org auth URL"
         id: set-auth-url
         run: |
-          echo "test" > test.txt
+          echo "teeeeest" > test.txt
 
       # Upload SFDX AuthUrl
       - name: Upload SFDX AuthUrl
@@ -101,7 +101,7 @@ jobs:
 
       - name: test
         run: |
-          echo test.txt
+          cat test.txt
 
     #   # Install SFDX
     #   - name: Install SFDX
