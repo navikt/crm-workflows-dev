@@ -104,14 +104,14 @@ jobs:
 
       # Delete SFDX AuthUrl from compile job
       - name: Delete SFDX AuthUrl from compile job
-      uses: christian-korneck/delete-run-artifacts-action@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: christian-korneck/delete-run-artifacts-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: print2 
         run: |
           cat test.txt
-          
+
     #   # Install SFDX
     #   - name: Install SFDX
     #     uses: sfdx-actions/setup-sfdx@v1
