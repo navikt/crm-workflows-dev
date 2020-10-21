@@ -3,6 +3,7 @@ name: "[PR] Validate"
 
 # Definition when the workflow should run
 on:
+  workflow_dispatch:
   pull_request:
     branches:
       - "*"
@@ -67,11 +68,14 @@ jobs:
         id: set-auth-url
         run: |
           authurl=$(sfdx force:org:display -u scratch-org --verbose --json | jq '.result.sfdxAuthUrl' | sed 's/\"//g')
-          echo $authurl
-          echo "::set-output name=authurl::$(echo $authurl)"
+          echo $authurl > SCRATCH_ORG_SFDX_AUTH_URL.txt
 
-    outputs:
-      authurl: ${{ steps.set-auth-url.outputs.authurl }}
+      # Upload SFDX AuthUrl
+      - name: Upload SFDX AuthUrl
+        uses: actions/upload-artifact@v2
+        with:
+          name: sfdx-auth-url
+          path: SCRATCH_ORG_SFDX_AUTH_URL.txt
 
   # ######################################## #
   # ############### RUN TESTS ############## #
@@ -89,14 +93,26 @@ jobs:
       - name: "Checkout source code"
         uses: actions/checkout@v2
 
+      # Download SFDX AuthUrl from compile job
+      - name: Download SFDX AuthUrl from compile job
+        uses: actions/download-artifact@v2
+        with:
+          name: sfdx-auth-url
+
       # Authenticate scratch org
       - name: "Authenticate scratch org"
         run: |
           echo ${{ needs.compile.outputs.authurl }}
           authurl=${{ needs.compile.outputs.authurl }}
-          echo $authurl > ./SCRATCH_ORG_SFDX_URL.txt
-          sfdx force:auth:sfdxurl:store -f ./SCRATCH_ORG_SFDX_URL.txt -a scratch-org -s
-          rm -f ./SCRATCH_ORG_SFDX_URL.txt
+          echo $authurl > ./SCRATCH_ORG_SFDX_AUTH_URL.txt
+          sfdx force:auth:sfdxurl:store -f ./SCRATCH_ORG_SFDX_AUTH_URL.txt -a scratch-org -s
+          rm -f ./SCRATCH_ORG_SFDX_AUTH_URL.txt
+
+      # Delete SFDX AuthUrl from compile job
+      - name: Delete SFDX AuthUrl from compile job
+        uses: geekyeggo/delete-artifact@v1
+        with:
+          name: sfdx-auth-url
 
       # Get all test classes from current repo
       - name: Get all test classes from current repo
