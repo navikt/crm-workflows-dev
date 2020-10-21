@@ -20,9 +20,9 @@ jobs:
       # - name: Install SFDX
       #   uses: sfdx-actions/setup-sfdx@v1
 
-      # # Checkout the code in the pull request
-      # - name: "Checkout source code"
-      #   uses: actions/checkout@v2
+      # Checkout the code in the pull request
+      - name: "Checkout source code"
+        uses: actions/checkout@v2
 
       # # Authenticate dev hub
       # - name: "Authenticate Dev Hub"
@@ -75,10 +75,14 @@ jobs:
       - name: "Set scratch org auth URL"
         id: set-auth-url
         run: |
-          echo "::set-output name=authurl::test"
+          echo "test" > test.txt
 
-    outputs:
-      authurl: ${{ steps.set-auth-url.outputs.authurl }}
+      # Upload SFDX AuthUrl
+      - name: Upload SFDX AuthUrl
+        uses: actions/upload-artifact@v2
+        with:
+          name: sfdx-auth-url
+          path: test.txt
 
   # ######################################## #
   # ############### RUN TESTS ############## #
@@ -88,9 +92,16 @@ jobs:
     needs: [compile]
     runs-on: ubuntu-latest
     steps:
+
+      # Download SFDX AuthUrl from compile job
+      - name: Download SFDX AuthUrl from compile job
+        uses: actions/download-artifact@v2
+        with:
+          name: sfdx-auth-url
+
       - name: test
         run: |
-          echo ${{ needs.compile.outputs.authurl }}
+          echo test.txt
 
     #   # Install SFDX
     #   - name: Install SFDX
