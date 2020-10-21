@@ -139,7 +139,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: apex-tests
-          path: tests
+          path: ./tests/apex
 
   # ######################################## #
   # ########## CHECK CODE COVERAGE ######### #
@@ -149,6 +149,10 @@ jobs:
     needs: run-tests
     runs-on: ubuntu-latest
     steps:
+      # Checkout the code in the pull request
+      - name: "Checkout source code"
+        uses: actions/checkout@v2
+
       # Download tests
       - name: Download tests
         uses: actions/download-artifact@v2
