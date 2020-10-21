@@ -35,6 +35,18 @@ jobs:
       - name: "Create scratch org"
         run: sfdx force:org:create -f config/project-scratch-def.json -a scratch-org -s -d 1
 
+      # Set SCRATCH_ORG_SFDX_AUTH_URL.txt
+      - name: "Set SCRATCH_ORG_SFDX_AUTH_URL.txt"
+        id: set-auth-url
+        run: sfdx force:org:display -u scratch-org --verbose --json | jq '.result.sfdxAuthUrl' | sed 's/\"//g' > SCRATCH_ORG_SFDX_AUTH_URL.txt
+
+      # Upload SCRATCH_ORG_SFDX_AUTH_URL.txt
+      - name: Upload SFDX AuthUrl
+        uses: actions/upload-artifact@v2
+        with:
+          name: sfdx-auth-url
+          path: SCRATCH_ORG_SFDX_AUTH_URL.txt
+
       # Install sfpowerkit plugin used to install multiple packages only by version number
       - name: "Install sfpowerkit plugin"
         run: "echo y | sfdx plugins:install sfpowerkit"
@@ -58,24 +70,6 @@ jobs:
       - name: "Push source to scratch org"
         run: "sfdx force:source:push"
 
-      # Delete scratch orgs on errors
-      - name: "Delete scratch org"
-        if: failure()
-        run: "sfdx force:org:delete -p -u scratch-org"
-
-      # Set Scratch Org Auth URL
-      - name: "Set scratch org auth URL"
-        id: set-auth-url
-        run: |
-          authurl=$(sfdx force:org:display -u scratch-org --verbose --json | jq '.result.sfdxAuthUrl' | sed 's/\"//g')
-          echo $authurl > SCRATCH_ORG_SFDX_AUTH_URL.txt
-
-      # Upload SFDX AuthUrl
-      - name: Upload SFDX AuthUrl
-        uses: actions/upload-artifact@v2
-        with:
-          name: sfdx-auth-url
-          path: SCRATCH_ORG_SFDX_AUTH_URL.txt
 
   # ######################################## #
   # ############### RUN TESTS ############## #
@@ -93,23 +87,15 @@ jobs:
       - name: "Checkout source code"
         uses: actions/checkout@v2
 
-      # Download SFDX AuthUrl from compile job
-      - name: Download SFDX AuthUrl from compile job
+      # Download SCRATCH_ORG_SFDX_AUTH_URL.txt
+      - name: Download SCRATCH_ORG_SFDX_AUTH_URL.txt
         uses: actions/download-artifact@v2
         with:
           name: sfdx-auth-url
 
       # Authenticate scratch org
       - name: "Authenticate scratch org"
-        run: |
-          sfdx force:auth:sfdxurl:store -f ./SCRATCH_ORG_SFDX_AUTH_URL.txt -a scratch-org -s
-          rm -f ./SCRATCH_ORG_SFDX_AUTH_URL.txt
-
-      # Delete SFDX AuthUrl from compile job
-      - name: Delete SFDX AuthUrl from compile job
-        uses: geekyeggo/delete-artifact@v1
-        with:
-          name: sfdx-auth-url
+        run: sfdx force:auth:sfdxurl:store -f ./SCRATCH_ORG_SFDX_AUTH_URL.txt -a scratch-org -s
 
       # Get all test classes from current repo
       - name: Get all test classes from current repo
@@ -133,11 +119,6 @@ jobs:
           name: apex-tests
           path: tests
 
-      # Delete scratch orgs
-      - name: "Delete scratch org"
-        if: always()
-        run: "sfdx force:org:delete -p -u scratch-org"
-
   # ######################################## #
   # ########## CHECK CODE COVERAGE ######### #
   # ######################################## #
@@ -146,8 +127,8 @@ jobs:
     needs: [run-tests]
     runs-on: ubuntu-latest
     steps:
-      # Download SFDX AuthUrl from compile job
-      - name: Download SFDX AuthUrl from compile job
+      # Download tests
+      - name: Download tests
         uses: actions/download-artifact@v2
         with:
           name: apex-tests
@@ -163,3 +144,49 @@ jobs:
             echo "Because it is less than 85%, the validation failed"
             exit 125
           fi
+ 
+  # ######################################## #
+  # ################ CLEANUP ############### #
+  # ######################################## #
+  cleanup:
+    name: Cleanup
+    needs: [compile, run-tests, check-code-coverage]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+
+      # Install SFDX
+      - name: Install SFDX
+        uses: sfdx-actions/setup-sfdx@v1
+
+      # Checkout the code in the pull request
+      - name: "Checkout source code"
+        uses: actions/checkout@v2
+
+      # Authenticate dev hub
+      - name: "Authenticate Dev Hub"
+        run: |
+          echo ${{ secrets.PROD_SFDX_URL}} > ./PROD_SFDX_URL.txt
+          sfdx force:auth:sfdxurl:store -f ./PROD_SFDX_URL.txt -a devhub -d
+          rm -f ./PROD_SFDX_URL.txt
+
+      # Download SCRATCH_ORG_SFDX_AUTH_URL.txt
+      - name: Download SCRATCH_ORG_SFDX_AUTH_URL.txt
+        uses: actions/download-artifact@v2
+        with:
+          name: sfdx-auth-url
+
+      # Authenticate scratch org
+      - name: "Authenticate scratch org"
+        run: sfdx force:auth:sfdxurl:store -f ./SCRATCH_ORG_SFDX_AUTH_URL.txt -a scratch-org -s
+
+      # Delete SCRATCH_ORG_SFDX_AUTH_URL.txt
+      - name: Delete SCRATCH_ORG_SFDX_AUTH_URL.txt
+        uses: geekyeggo/delete-artifact@v1
+        with:
+          name: sfdx-auth-url
+
+     # Delete scratch orgs
+      - name: "Delete scratch org"
+        if: always()
+        run: "sfdx force:org:delete -p -u scratch-org"
