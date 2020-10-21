@@ -16,24 +16,24 @@ jobs:
     name: Compile Metadata
     runs-on: ubuntu-latest
     steps:
-      # Install SFDX
-      - name: Install SFDX
-        uses: sfdx-actions/setup-sfdx@v1
+      # # Install SFDX
+      # - name: Install SFDX
+      #   uses: sfdx-actions/setup-sfdx@v1
 
-      # Checkout the code in the pull request
-      - name: "Checkout source code"
-        uses: actions/checkout@v2
+      # # Checkout the code in the pull request
+      # - name: "Checkout source code"
+      #   uses: actions/checkout@v2
 
-      # Authenticate dev hub
-      - name: "Authenticate Dev Hub"
-        run: |
-          echo ${{ secrets.PROD_SFDX_URL}} > ./PROD_SFDX_URL.txt
-          sfdx force:auth:sfdxurl:store -f ./PROD_SFDX_URL.txt -a devhub -d
-          rm -f ./PROD_SFDX_URL.txt
+      # # Authenticate dev hub
+      # - name: "Authenticate Dev Hub"
+      #   run: |
+      #     echo ${{ secrets.PROD_SFDX_URL}} > ./PROD_SFDX_URL.txt
+      #     sfdx force:auth:sfdxurl:store -f ./PROD_SFDX_URL.txt -a devhub -d
+      #     rm -f ./PROD_SFDX_URL.txt
 
-      # Create scratch org
-      - name: "Create scratch org"
-        run: sfdx force:org:create -f config/project-scratch-def.json -a scratch-org -s -d 1
+      # # Create scratch org
+      # - name: "Create scratch org"
+      #   run: sfdx force:org:create -f config/project-scratch-def.json -a scratch-org -s -d 1
 
       # # Install sfpowerkit plugin used to install multiple packages only by version number
       # - name: "Install sfpowerkit plugin"
@@ -58,17 +58,23 @@ jobs:
       # - name: "Push source to scratch org"
       #   run: "sfdx force:source:push"
 
-      # Delete scratch orgs on errors
-      - name: "Delete scratch org"
-        if: failure()
-        run: "sfdx force:org:delete -p -u scratch-org"
+      # # Delete scratch orgs on errors
+      # - name: "Delete scratch org"
+      #   if: failure()
+      #   run: "sfdx force:org:delete -p -u scratch-org"
+ 
+      # # Set Scratch Org Auth URL
+      # - name: "Set scratch org auth URL"
+      #   id: set-auth-url
+      #   run: |
+      #     authurl=$(sfdx force:org:display -u scratch-org --verbose --json | jq '.result.sfdxAuthUrl' | sed 's/\"//g')
+      #     echo $authurl > test.txt
  
       # Set Scratch Org Auth URL
       - name: "Set scratch org auth URL"
         id: set-auth-url
         run: |
-          authurl=$(sfdx force:org:display -u scratch-org --verbose --json | jq '.result.sfdxAuthUrl' | sed 's/\"//g')
-          echo $authurl > test.txt
+          echo "teeeeest2" > test.txt
 
       # Upload SFDX AuthUrl
       - name: Upload SFDX AuthUrl
@@ -92,10 +98,20 @@ jobs:
         with:
           name: sfdx-auth-url
 
-      - name: test
+      - name: print1
         run: |
           cat test.txt
 
+      # Delete SFDX AuthUrl from compile job
+      - name: Delete SFDX AuthUrl from compile job
+      uses: christian-korneck/delete-run-artifacts-action@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: print2 
+        run: |
+          cat test.txt
+          
     #   # Install SFDX
     #   - name: Install SFDX
     #     uses: sfdx-actions/setup-sfdx@v1
