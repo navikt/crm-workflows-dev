@@ -137,7 +137,6 @@ jobs:
 
       # Upload Apex test results
       - name: Upload Apex test results
-        if: steps.test-classes-in-repo.outputs.classes
         uses: actions/upload-artifact@v2
         with:
           name: apex-tests
