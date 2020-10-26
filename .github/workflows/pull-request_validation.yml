@@ -3,7 +3,6 @@ name: "[PR] Validate"
 
 # Definition when the workflow should run
 on:
-  workflow_dispatch:
   pull_request:
     branches:
       - "*"
@@ -133,6 +132,7 @@ jobs:
 
       # Run Apex tests in scratch org
       - name: "Run Apex tests"
+        if: steps.test-classes-in-repo.outputs.classes != ""
         run: "sfdx force:apex:test:run -t ${{ steps.test-classes-in-repo.outputs.classes }} -c -r human -d ./tests/apex -w 20"
 
       # Upload Apex test results
