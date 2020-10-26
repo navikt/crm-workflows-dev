@@ -171,8 +171,9 @@ jobs:
         if: ${{ needs.run-tests.outputs.hasTestClasses }}
         run: |
           codecoverage=$(cat tests/apex/test-result-707*.json | jq '.summary.orgWideCoverage' | sed 's/\"//g; s/\%//g')
-          if [ $codecoverage -lt 85 ]
           echo "Code coverage is $codecoverage%"
+          
+          if [ $codecoverage -lt 85 ]
           then
             echo "Because it is less than 85%, the validation failed"
             exit 125
