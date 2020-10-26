@@ -137,10 +137,14 @@ jobs:
 
       # Upload Apex test results
       - name: Upload Apex test results
+        if: steps.test-classes-in-repo.outputs.classes
         uses: actions/upload-artifact@v2
         with:
           name: apex-tests
           path: ./tests/apex
+    outputs:
+      hasTestClasses: ${{ steps.test-classes-in-repo.outputs.classes }}
+
 
   # ######################################## #
   # ########## CHECK CODE COVERAGE ######### #
@@ -156,6 +160,7 @@ jobs:
 
       # Download tests
       - name: Download tests
+        if: ${{ needs.run-tests.outputs.hasTestClasses }}
         uses: actions/download-artifact@v2
         with:
           name: apex-tests
@@ -163,6 +168,7 @@ jobs:
 
       # Validate at least 85% code coverage
       - name: Validate at least 85% code coverage
+        if: ${{ needs.run-tests.outputs.hasTestClasses }}
         run: |
           codecoverage=$(cat tests/apex/test-result-707*.json | jq '.summary.orgWideCoverage' | sed 's/\"//g; s/\%//g')
           if [ $codecoverage -lt 85 ]
