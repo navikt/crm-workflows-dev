@@ -172,10 +172,12 @@ jobs:
         run: |
           codecoverage=$(cat tests/apex/test-result-707*.json | jq '.summary.orgWideCoverage' | sed 's/\"//g; s/\%//g')
           if [ $codecoverage -lt 85 ]
+          echo "Code coverage is $codecoverage%"
           then
-            echo "Code coverage is $codecoverage%"
             echo "Because it is less than 85%, the validation failed"
             exit 125
+          else
+            echo "Because it is equal or more than 85%, the validation succeeded"
           fi
 
   # ######################################## #
