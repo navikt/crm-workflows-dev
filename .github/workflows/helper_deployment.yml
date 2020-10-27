@@ -6,7 +6,7 @@ on:
         description: "Package ID"
         required: true
       org:
-        description: "Org (prod, preprod, dev)"
+        description: "Org (prod, preprod, dev, uat, sit)"
         required: true
 jobs:
   debug:
@@ -38,6 +38,14 @@ jobs:
           then
             echo "::set-output name=target::$(echo ${{ secrets.DEV_SFDX_URL }})"
             echo "'dev' was set"
+          elif [ ${{ github.event.inputs.org }} == "uat" ]
+          then
+            echo "::set-output name=target::$(echo ${{ secrets.UAT_SFDX_URL }})"
+            echo "'preprod' was set"
+          elif [ ${{ github.event.inputs.org }} == "sit" ]
+          then
+            echo "::set-output name=target::$(echo ${{ secrets.SIT_SFDX_URL }})"
+            echo "'preprod' was set"
           fi
 
       # Authorize SFDX
