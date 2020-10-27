@@ -171,7 +171,28 @@ jobs:
       - name: Validate at least 85% code coverage
         if: ${{ needs.run-tests.outputs.hasTestClasses }}
         run: |
-          codecoverage=$(cat tests/apex/test-result-707*.json | jq '.summary.orgWideCoverage' | sed 's/\"//g; s/\%//g')
+          classes=()
+          cd force-app
+          for p in $( grep -r -l -i --include="*.cls" "" . | sed 's@.*/@@' ); do
+            class=$(echo $p | cut -f 1 -d '.')
+            classes[${#classes[@]}]=$class
+          done
+          cd ..
+
+          totalCovered=0
+          totalLines=0
+
+          for row in $(jq -c -r '.[]' <<< "$(cat tests/apex/test-result-codecoverage.json)"); do
+            name=$(jq -r '.name' <<< $row)
+            if [[ " ${classes[@]} " =~ " ${name} " ]]; then
+              covered=$(jq '.totalCovered' <<< $row)
+              lines=$(jq '.totalLines' <<< $row)
+              let totalCovered+=covered
+              let totalLines+=lines
+            fi
+          done
+          
+          let codecoverage=totalCovered*100/totalLines
           echo "Code coverage is $codecoverage%"
 
           if [ $codecoverage -lt 85 ]
