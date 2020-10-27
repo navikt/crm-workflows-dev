@@ -90,6 +90,12 @@ jobs:
       - name: "Authenticate scratch org"
         run: sfdx force:auth:sfdxurl:store -f ./SCRATCH_ORG_SFDX_AUTH_URL.txt -a scratch-org -s
 
+      # Delete unpackagable and scratch-org folder
+      - name: "Delete unpackagable"
+        run: |
+          rm -rf ./force-app/unpackagable
+          rm -rf ./force-app/scratch-org
+
       # Deploy source to scratch org
       - name: "Push source to scratch org"
         run: "sfdx force:source:push"
@@ -120,6 +126,12 @@ jobs:
       - name: "Authenticate scratch org"
         run: sfdx force:auth:sfdxurl:store -f ./SCRATCH_ORG_SFDX_AUTH_URL.txt -a scratch-org -s
 
+      # Delete unpackagable and scratch-org folder
+      - name: "Delete unpackagable"
+        run: |
+          rm -rf ./force-app/unpackagable
+          rm -rf ./force-app/scratch-org
+
       # Get all test classes from current repo
       - name: Get all test classes from current repo
         id: test-classes-in-repo
@@ -146,7 +158,6 @@ jobs:
     outputs:
       hasTestClasses: ${{ steps.test-classes-in-repo.outputs.classes }}
 
-
   # ######################################## #
   # ########## CHECK CODE COVERAGE ######### #
   # ######################################## #
@@ -167,6 +178,12 @@ jobs:
           name: apex-tests
           path: ./tests/apex
 
+      # Delete unpackagable and scratch-org folder
+      - name: "Delete unpackagable"
+        run: |
+          rm -rf ./force-app/unpackagable
+          rm -rf ./force-app/scratch-org
+          
       # Get code coverage
       - name: Get code coverage
         id: getCodeCoverage
@@ -179,7 +196,7 @@ jobs:
             classes[${#classes[@]}]=$class
           done
           cd ..
-          
+
           totalCovered=0
           totalLines=0
 
