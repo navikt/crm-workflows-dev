@@ -165,10 +165,10 @@ jobs:
       deployToDev: ${{ steps.checkSecret.outputs.deployToDev }}
 
   # ######################################## #
-  # ######## DEPLOY PACKAGE TO DEV ######### #
+  # ############ DEPLOY PACKAGE ############ #
   # ######################################## #
-  deploy-package-to-dev:
-    name: Deploy package to dev sandbox
+  deploy-package-to-sandboxes:
+    name: Deploy package to sandboxes
     runs-on: ubuntu-latest
     needs: [create-package, check-sandbox-deploy]
     if: ${{ needs.check-sandbox-deploy.outputs.shouldContinue == 'true' }}
