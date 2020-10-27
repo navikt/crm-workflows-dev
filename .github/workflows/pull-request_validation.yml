@@ -167,8 +167,9 @@ jobs:
           name: apex-tests
           path: ./tests/apex
 
-      # Validate at least 85% code coverage
-      - name: Validate at least 85% code coverage
+      # Get code coverage
+      - name: Get code coverage
+        id: getCodeCoverage
         if: ${{ needs.run-tests.outputs.hasTestClasses }}
         run: |
           classes=()
@@ -178,7 +179,7 @@ jobs:
             classes[${#classes[@]}]=$class
           done
           cd ..
-
+          
           totalCovered=0
           totalLines=0
 
@@ -191,8 +192,15 @@ jobs:
               let totalLines+=lines
             fi
           done
-          
+
           let codecoverage=totalCovered*100/totalLines
+          echo "::set-output name=codecoverage::$(echo $codecoverage)"
+
+      # Validate at least 85% code coverage
+      - name: Validate at least 85% code coverage
+        if: ${{ needs.run-tests.outputs.hasTestClasses }}
+        run: |
+          codecoverage=${{ steps.getCodeCoverage.outputs.codecoverage }}
           echo "Code coverage is $codecoverage%"
 
           if [ $codecoverage -lt 85 ]
