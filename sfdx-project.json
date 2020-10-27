@@ -5,7 +5,21 @@
             "default": true,
             "package": "crm-workflows-dev",
             "versionName": "ver 0.1",
-            "versionNumber": "0.12.0.NEXT"
+            "versionNumber": "0.12.0.NEXT",
+            "dependencies": [
+                {
+                    "package": "crm-platform-base",
+                    "versionNumber": "0.42.0.LATEST"
+                },
+                {
+                    "package": "crm-platform-access-control",
+                    "versionNumber": "0.29.0.LATEST"
+                },
+                {
+                    "package": "crm-arbeidsgiver-base",
+                    "versionNumber": "1.22.0.LATEST"
+                }
+            ]
         }
     ],
     "namespace": "",
