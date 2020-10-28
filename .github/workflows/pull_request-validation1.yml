@@ -11,13 +11,13 @@ jobs:
     name: Setup
     runs-on: ubuntu-latest
     steps:
-      # Install SFDX
-      - name: Install SFDX
-        uses: sfdx-actions/setup-sfdx@v1
-
       # Checkout source code
       - name: Checkout source code
         uses: actions/checkout@v2
+
+      # Install SFDX
+      - name: Install SFDX
+        uses: sfdx-actions/setup-sfdx@v1
 
       # Authenticate dev hub
       - name: Authenticate Dev Hub
@@ -68,13 +68,13 @@ jobs:
     needs: setup
     runs-on: ubuntu-latest
     steps:
-      # Install SFDX
-      - name: Install SFDX
-        uses: sfdx-actions/setup-sfdx@v1
-
       # Checkout source code
       - name: Checkout source code
         uses: actions/checkout@v2
+
+      # Install SFDX
+      - name: Install SFDX
+        uses: sfdx-actions/setup-sfdx@v1
 
       # Download SCRATCH_ORG_SFDX_AUTH_URL.txt
       - name: Download SCRATCH_ORG_SFDX_AUTH_URL.txt
@@ -104,13 +104,13 @@ jobs:
     needs: compile
     runs-on: ubuntu-latest
     steps:
-      # Install SFDX
-      - name: Install SFDX
-        uses: sfdx-actions/setup-sfdx@v1
-
       # Checkout source code
       - name: Checkout source code
         uses: actions/checkout@v2
+
+      # Install SFDX
+      - name: Install SFDX
+        uses: sfdx-actions/setup-sfdx@v1
 
       # Download SCRATCH_ORG_SFDX_AUTH_URL.txt
       - name: Download SCRATCH_ORG_SFDX_AUTH_URL.txt
@@ -232,13 +232,13 @@ jobs:
     if: always()
     runs-on: ubuntu-latest
     steps:
-      # Install SFDX
-      - name: Install SFDX
-        uses: sfdx-actions/setup-sfdx@v1
-
       # Checkout source code
       - name: Checkout source code
         uses: actions/checkout@v2
+
+      # Install SFDX
+      - name: Install SFDX
+        uses: sfdx-actions/setup-sfdx@v1
 
       # Authenticate dev hub
       - name: Authenticate Dev Hub

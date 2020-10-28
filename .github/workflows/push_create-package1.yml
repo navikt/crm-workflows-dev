@@ -14,13 +14,13 @@ jobs:
     name: Create Package
     runs-on: ubuntu-latest
     steps:
-      # Install SFDX
-      - name: Install SFDX
-        uses: sfdx-actions/setup-sfdx@v1
-
       # Checkout source code
       - name: Checkout source code
         uses: actions/checkout@v2
+
+      # Install SFDX
+      - name: Install SFDX
+        uses: sfdx-actions/setup-sfdx@v1
 
       # Authenticate prod
       - name: Authenticate prod
@@ -67,13 +67,13 @@ jobs:
     needs: [create-package]
     runs-on: ubuntu-latest
     steps:
-       # Install SFDX
-      - name: Install SFDX
-        uses: sfdx-actions/setup-sfdx@v1
-
       # Checkout source code
       - name: Checkout source code
         uses: actions/checkout@v2
+
+       # Install SFDX
+      - name: Install SFDX
+        uses: sfdx-actions/setup-sfdx@v1
 
       # Authenticate prod
       - name: Authenticate prod
@@ -198,13 +198,13 @@ jobs:
     needs: [create-package, check-deployment-secrets]
     if: ${{ needs.check-deployment-secrets.outputs.shouldContinue == 'true' }}
     steps:
-      # Install SFDX
-      - name: Install SFDX
-        uses: sfdx-actions/setup-sfdx@v1
-
       # Checkout source code
       - name: Checkout source code
         uses: actions/checkout@v2
+
+      # Install SFDX
+      - name: Install SFDX
+        uses: sfdx-actions/setup-sfdx@v1
 
       # Authenticate prod
       - name: Authenticate prod

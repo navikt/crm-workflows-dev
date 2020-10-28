@@ -11,13 +11,13 @@ jobs:
     name: Create new package
     runs-on: ubuntu-latest
     steps:
-      # Install SFDX
-      - name: Install SFDX
-        uses: sfdx-actions/setup-sfdx@v1
-
       # Checkout source code
       - name: Checkout source code
         uses: actions/checkout@v2
+
+      # Install SFDX
+      - name: Install SFDX
+        uses: sfdx-actions/setup-sfdx@v1
 
       # Authenticate prod
       - name: Authenticate prod
