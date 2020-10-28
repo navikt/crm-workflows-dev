@@ -1,4 +1,4 @@
-name: "[HELPER] Promote Package"
+name: [HELPER] Promote Package
 on:
   workflow_dispatch:
     inputs:
@@ -90,7 +90,7 @@ jobs:
           cat sfdx-project.json
 
       # The main branch is protected
-      - name: "Create new branch and pull request for updated package version ID"
+      - name: Create new branch and pull request for updated package version ID
         uses: peter-evans/create-pull-request@v2
         with:
           title: "Added new package version ID"
@@ -100,7 +100,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       # Merge pull request
-      - name: "Merge pull request"
+      - name: Merge pull request
         uses: juliangruber/merge-pull-request-action@v1
         with:
           # ! USES CUSTOM PAT TO INITIATE STATUS CHECKS (SEE "Require status checks to pass before merging" IN BRANCHES SETTINGS IN REPO)
