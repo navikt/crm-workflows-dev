@@ -35,7 +35,7 @@ jobs:
 
       # Install sfpowerkit plugin used to install multiple packages only by version number
       - name: Install sfpowerkit plugin
-        run: "echo y | sfdx plugins:install sfpowerkit
+        run: echo y | sfdx plugins:install sfpowerkit
 
       # Get package keys
       - name: Get package keys
@@ -50,7 +50,7 @@ jobs:
 
       # Install packages this repo is dependant on
       - name: Install dependant packages
-        run: "sfdx sfpowerkit:package:dependencies:install -u dev -r -a -w 60 -k '${{ steps.install-keys.outputs.keys }}'"
+        run: sfdx sfpowerkit:package:dependencies:install -u dev -r -a -w 60 -k '${{ steps.install-keys.outputs.keys }}'
 
       # Install new package version into dev sandbox
       - name: Install new package version into dev sandbox

@@ -43,7 +43,7 @@ jobs:
 
       # Promote package
       - name: Promote package
-        run: "sfdx force:package:version:promote --package ${{ github.event.inputs.packageId }} --noprompt"
+        run: sfdx force:package:version:promote --package ${{ github.event.inputs.packageId }} --noprompt
 
   install-package-preprod:
     name: Install Package in Preprod

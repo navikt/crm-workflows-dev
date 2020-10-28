@@ -227,7 +227,7 @@ jobs:
 
       # Install sfpowerkit plugin used to install multiple packages only by version number
       - name: Install sfpowerkit plugin
-        run: "echo y | sfdx plugins:install sfpowerkit"
+        run: echo y | sfdx plugins:install sfpowerkit
 
 # TODO move to previous job
       # Get package keys
@@ -243,21 +243,21 @@ jobs:
       # Install dependant packages to dev sandbox
       - name: Install dependant packages to dev sandbox
         if: ${{ needs.check-sandbox-deploy.outputs.deployToDev == 'true' }}
-        run: "sfdx sfpowerkit:package:dependencies:install -u dev -r -a -w 60 -k '${{ steps.install-keys.outputs.keys }}'"
+        run: sfdx sfpowerkit:package:dependencies:install -u dev -r -a -w 60 -k '${{ steps.install-keys.outputs.keys }}'
 
       # Install package in dev sandbox org
       - name: Install package in dev sandbox org
         if: ${{ needs.check-sandbox-deploy.outputs.deployToDev == 'true' }}
-        run: "sfdx force:package:install --package ${{ needs.create-package.outputs.packageId }} -k ${{ secrets.PACKAGE_KEY }} -u dev -w 10 -b 10 -r"
+        run: sfdx force:package:install --package ${{ needs.create-package.outputs.packageId }} -k ${{ secrets.PACKAGE_KEY }} -u dev -w 10 -b 10 -r
 
 # TODO separate
       # Install dependant packages to UAT sandbox
       - name: Install dependant packages to UAT sandbox
         if: ${{ needs.check-sandbox-deploy.outputs.deployToUAT == 'true' }}
-        run: "sfdx sfpowerkit:package:dependencies:install -u dev -r -a -w 60 -k '${{ steps.install-keys.outputs.keys }}'"
+        run: sfdx sfpowerkit:package:dependencies:install -u dev -r -a -w 60 -k '${{ steps.install-keys.outputs.keys }}'
 
       # Install package in UAT sandbox org
       - name: Install package in UAT sandbox org
         if: ${{ needs.check-sandbox-deploy.outputs.deployToUAT == 'true' }}
-        run: "sfdx force:package:install --package ${{ needs.create-package.outputs.packageId }} -k ${{ secrets.PACKAGE_KEY }} -u uat -w 10 -b 10 -r"
+        run: sfdx force:package:install --package ${{ needs.create-package.outputs.packageId }} -k ${{ secrets.PACKAGE_KEY }} -u uat -w 10 -b 10 -r
 
