@@ -121,7 +121,6 @@ jobs:
           echo "::set-output name=releaseName::$(echo $versionNumber)-beta$(echo $betaVersionNumber)"
           echo "::set-output name=bodyVersion::$(echo $versionNumber).$(echo $betaVersionNumber)"
           echo "::set-output name=bodyPackage::${{ needs.create-package.outputs.packageId }}"
-          echo "::set-output name=codeCoverage::$( sfdx force:package:version:report -p ${{ needs.create-package.outputs.packageId }} --json | jq '.result.CodeCoverage.apexCodeCoveragePercentage' -r )"
 
           echo "::set-output name=packageCreation::✅ Package Creation"
 
@@ -149,7 +148,7 @@ jobs:
           body: |
             **Version**: ${{ steps.release-fields.outputs.bodyVersion }}
             **Package ID**: ${{ steps.release-fields.outputs.bodyPackage }}
-            **Code Coverage**: ${{ steps.release-fields.outputs.codeCoverage }}%
+            **Code Coverage**: ${{ needs.create-package.outputs.codeCoverage }}%
 
             **Author**: ${{ github.actor }}
 
@@ -163,36 +162,34 @@ jobs:
           prerelease: true
 
   # ################################################################# #
-  # #################### CHECK DEV SANDBOX DEPLOY ################### #
+  # #################### CHECK DEPLOYMENT SECRETS ################### #
   # ################################################################# #
   check-deployment-secrets:
     name: Check Deployment Secrets
     runs-on: ubuntu-latest
     steps:
-      - name: Check deployment to sandbox after package creation
+      - name: Check sandboxes to deploy to
         id: checkSecret
         run: |
           echo "Install in dev sandbox: ${{ env.DEV == '1' }}"
           echo "Install in UAT sandbox: ${{ env.UAT == '1' }}"
-          echo "::set-output name=shouldContinue::${{ env.DEV == '1' || env.UAT == '1' }}"
           echo "::set-output name=deployToUAT::${{ env.UAT == '1' }}"
           echo "::set-output name=deployToDev::${{ env.DEV == '1' }}"
         env:
           DEV: ${{ secrets.DEPLOY_TO_DEV_AFTER_PACKAGE_CREATION }}
           UAT: ${{ secrets.DEPLOY_TO_UAT_AFTER_PACKAGE_CREATION }}
     outputs:
-      shouldContinue: ${{ steps.checkSecret.outputs.shouldContinue }}
-      deployToUAT: ${{ steps.checkSecret.outputs.deployToUAT }}
       deployToDev: ${{ steps.checkSecret.outputs.deployToDev }}
+      deployToUAT: ${{ steps.checkSecret.outputs.deployToUAT }}
 
   # ################################################################# #
-  # ######################### DEPLOY PACKAGE ######################## #
+  # ######################### DEPLOY TO DEV ######################### #
   # ################################################################# #
-  deploy-package-to-sandboxes:
-    name: Deploy package to sandboxes
+  deploy-to-dev:
+    name: Deploy to Dev Sandbox
     runs-on: ubuntu-latest
     needs: [create-package, check-deployment-secrets]
-    if: ${{ needs.check-deployment-secrets.outputs.shouldContinue == 'true' }}
+    if: ${{ needs.check-deployment-secrets.outputs.deployToDev == 'true' }}
     steps:
       # Checkout source code
       - name: Checkout source code
@@ -217,6 +214,44 @@ jobs:
           sfdx force:auth:sfdxurl:store -f ./DEV_SFDX_URL.txt -a dev -s
           rm -f ./DEV_SFDX_URL.txt
 
+      # Install sfpowerkit plugin used to install multiple packages only by version number
+      - name: Install sfpowerkit plugin
+        run: echo y | sfdx plugins:install sfpowerkit
+
+      # Install dependant packages to dev sandbox
+      - name: Install dependant packages to dev sandbox
+        if: ${{ needs.check-deployment-secrets.outputs.deployToDev == 'true' }}
+        run: sfdx sfpowerkit:package:dependencies:install -u dev -r -a -w 60 -k '${{ steps.install-keys.outputs.keys }}'
+
+      # Install package in dev sandbox org
+      - name: Install package in dev sandbox org
+        if: ${{ needs.check-deployment-secrets.outputs.deployToDev == 'true' }}
+        run: sfdx force:package:install --package ${{ needs.create-package.outputs.packageId }} -k ${{ secrets.PACKAGE_KEY }} -u dev -w 10 -b 10 -r
+
+  # ################################################################# #
+  # ######################### DEPLOY TO UAT ######################## #
+  # ################################################################# #
+  deploy-to-uat:
+    name: Deploy to UAT Sandbox
+    runs-on: ubuntu-latest
+    needs: [create-package, check-deployment-secrets]
+    if: ${{ needs.check-deployment-secrets.outputs.deployToUAT == 'true' }}
+    steps:
+      # Checkout source code
+      - name: Checkout source code
+        uses: actions/checkout@v2
+
+      # Install SFDX
+      - name: Install SFDX
+        uses: sfdx-actions/setup-sfdx@v1
+
+      # Authenticate prod
+      - name: Authenticate prod
+        run: |
+          echo ${{ secrets.PROD_SFDX_URL}} > ./PROD_SFDX_URL.txt
+          sfdx force:auth:sfdxurl:store -f ./PROD_SFDX_URL.txt -a devhub -d
+          rm -f ./PROD_SFDX_URL.txt
+
       # Authenticate UAT sandbox
       - name: Authenticate UAT sandbox
         if: ${{ needs.check-deployment-secrets.outputs.deployToUAT == 'true' }}
@@ -229,32 +264,10 @@ jobs:
       - name: Install sfpowerkit plugin
         run: echo y | sfdx plugins:install sfpowerkit
 
-# TODO move to previous job
-      # Get package keys
-      - name: Get package keys
-        id: install-keys
-        run: |
-          keys=""
-          for p in $(jq '.result | .[].Name' -r <<< "$(sfdx force:package:list --json)"); do
-              keys+=$p":${{ secrets.PACKAGE_KEY }} "
-          done
-          echo "::set-output name=keys::$(echo $keys)"
-
-      # Install dependant packages to dev sandbox
-      - name: Install dependant packages to dev sandbox
-        if: ${{ needs.check-deployment-secrets.outputs.deployToDev == 'true' }}
-        run: sfdx sfpowerkit:package:dependencies:install -u dev -r -a -w 60 -k '${{ steps.install-keys.outputs.keys }}'
-
-      # Install package in dev sandbox org
-      - name: Install package in dev sandbox org
-        if: ${{ needs.check-deployment-secrets.outputs.deployToDev == 'true' }}
-        run: sfdx force:package:install --package ${{ needs.create-package.outputs.packageId }} -k ${{ secrets.PACKAGE_KEY }} -u dev -w 10 -b 10 -r
-
-# TODO separate
       # Install dependant packages to UAT sandbox
       - name: Install dependant packages to UAT sandbox
         if: ${{ needs.check-deployment-secrets.outputs.deployToUAT == 'true' }}
-        run: sfdx sfpowerkit:package:dependencies:install -u dev -r -a -w 60 -k '${{ steps.install-keys.outputs.keys }}'
+        run: sfdx sfpowerkit:package:dependencies:install -u uat -r -a -w 60 -k '${{ steps.install-keys.outputs.keys }}'
 
       # Install package in UAT sandbox org
       - name: Install package in UAT sandbox org
