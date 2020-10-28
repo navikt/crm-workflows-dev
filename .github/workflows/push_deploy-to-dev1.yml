@@ -34,7 +34,7 @@ jobs:
           rm -f ./DEV_SFDX_URL.txt
 
       # Install sfpowerkit plugin used to install multiple packages only by version number
-      - name: Install sfpowerkit plugin"
+      - name: Install sfpowerkit plugin
         run: "echo y | sfdx plugins:install sfpowerkit
 
       # Get package keys
