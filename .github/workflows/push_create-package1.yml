@@ -40,24 +40,20 @@ jobs:
         id: package-version-create
         run: |
           sfdx force:package:version:create -f config/project-scratch-def.json -p $(cat sfdx-project.json | jq '.packageDirectories[0].package' -r) -k ${{ secrets.PACKAGE_KEY }} -w 90 -c --json | tee output
-          
+
           if [ $(cat output |jq '.status') == "1" ]; then
             exit 125
           fi
 
-          echo "::set-output name=result::$(cat output | jq -c .)"
-          echo "::set-output name=betaVersionNumber::$(cat sfdx-project.json | jq '.packageAliases | keys_unsorted[-1]' -r | sed 's/.*-//')"
+          packageId=$(cat output | jq -r '.result.SubscriberPackageVersionId')
+          echo "::set-output name=packageId::$(echo $packageId)"
+          echo "::set-output name=betaVersionNumber::$(cat sfdx-project.json | jq -r '.packageAliases | keys_unsorted[-1]' | sed 's/.*-//')"
+          echo "::set-output name=codeCoverage::$( sfdx force:package:version:report -p $(echo $packageId) --json | jq -r '.result.CodeCoverage.apexCodeCoveragePercentage' )"
 
-      # Extract package ID
-      - name: Extract package ID
-        id: extract-data-package-version-create
-        uses: muenzpraeger/github-action-extract-sfdx-packaging-result@master
-        with:
-          json: ${{steps.package-version-create.outputs.result}}
-    
     outputs:
-      packageId: ${{ steps.extract-data-package-version-create.outputs.packageVersionId }}
+      packageId: ${{ steps.package-version-create.outputs.packageId }}
       betaVersionNumber: ${{ steps.package-version-create.outputs.betaVersionNumber }}
+      codeCoverage: ${{ steps.package-version-create.outputs.codeCoverage }}
 
   # ################################################################# #
   # ######################## INSTALL TO SIT ######################### #
@@ -103,7 +99,7 @@ jobs:
       successfullyInstalled: ${{ steps.integration-installation.outputs.successfullyInstalled }}
 
   # ################################################################# #
-  # ######################### CREATE PACKAGE ######################## #
+  # ######################### CREATE RELEASE ######################## #
   # ################################################################# #
   create-release:
     name: Create release
