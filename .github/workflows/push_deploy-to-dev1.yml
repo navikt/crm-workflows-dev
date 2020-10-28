@@ -1,4 +1,4 @@
-name: [PUSH] Deploy to Dev
+name: "[PUSH] Deploy to Dev"
 on:
   workflow_dispatch:
   push:
