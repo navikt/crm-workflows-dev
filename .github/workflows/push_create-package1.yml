@@ -11,7 +11,7 @@ jobs:
   # ######################## CREATE PACKAGE ######################### #
   # ################################################################# #
   create-package:
-    name: Create new package
+    name: Create Package
     runs-on: ubuntu-latest
     steps:
       # Install SFDX
@@ -62,8 +62,8 @@ jobs:
   # ################################################################# #
   # ######################## INSTALL TO SIT ######################### #
   # ################################################################# #
-  install-sit:
-    name: Install to SIT
+  validate-in-sit:
+    name: Validate in SIT Sandbox
     needs: [create-package]
     runs-on: ubuntu-latest
     steps:
@@ -107,9 +107,13 @@ jobs:
   # ################################################################# #
   create-release:
     name: Create release
-    needs: [create-package, install-sit]
+    needs: [create-package, validate-in-sit]
     runs-on: ubuntu-latest
     steps:
+      # Checkout source code
+      - name: Checkout source code
+        uses: actions/checkout@v2
+        
       # set release variables
       - name: Set release fields
         id: release-fields
@@ -125,7 +129,7 @@ jobs:
 
           echo "::set-output name=packageCreation::✅ Package Creation"
 
-          if [ ${{ needs.install-sit.outputs.successfullyInstalled }} == "true" ]; then
+          if [ ${{ needs.validate-in-sit.outputs.successfullyInstalled }} == "true" ]; then
             echo "::set-output name=integrationInstallation::✅ Package Installation (Integration Sandbox)"
           else
             echo "::set-output name=integrationInstallation::❌ Package Installation (Integration Sandbox)"
