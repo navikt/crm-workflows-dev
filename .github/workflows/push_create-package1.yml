@@ -249,7 +249,7 @@ jobs:
       # Install dependant packages to UAT sandbox
       - name: Install dependant packages to UAT sandbox
         if: ${{ needs.check-deployment-secrets.outputs.deployToUAT == 'true' }}
-        run: sfdx sfpowerkit:package:dependencies:install -u dev -r -a -w 60 -k '${{ steps.install-keys.outputs.keys }}'
+        run: sfdx sfpowerkit:package:dependencies:install -u uat -r -a -w 60 -k '${{ steps.install-keys.outputs.keys }}'
 
       # Install package in UAT sandbox org
       - name: Install package in UAT sandbox org
