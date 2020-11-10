@@ -65,6 +65,10 @@ jobs:
       - name: Install package version to preprod
         run: sfdx force:package:install --package ${{ github.event.inputs.packageId }} -w 20 -b 20 -u preprod -r -k ${{ secrets.PACKAGE_KEY }} --json
 
+      # Checkout source code
+      - name: Checkout source code from master
+        uses: actions/checkout@v2
+
       # Deploy unpackagable content
       - name: Deploy unpackagable content
         run: |
