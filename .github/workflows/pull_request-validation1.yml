@@ -90,6 +90,7 @@ jobs:
       - name: Delete unpackagable
         run: |
           rm -rf ./force-app/unpackagable
+          rm -rf ./force-app/unpackagable-with-auto-deploy
           rm -rf ./force-app/scratch-org
 
       # Deploy source to scratch org
@@ -126,6 +127,7 @@ jobs:
       - name: Delete unpackagable
         run: |
           rm -rf ./force-app/unpackagable
+          rm -rf ./force-app/unpackagable-with-auto-deploy
           rm -rf ./force-app/scratch-org
 
       # Get all test classes from current repo
@@ -178,6 +180,7 @@ jobs:
       - name: Delete unpackagable
         run: |
           rm -rf ./force-app/unpackagable
+          rm -rf ./force-app/unpackagable-with-auto-deploy
           rm -rf ./force-app/scratch-org
 
       # Get code coverage
