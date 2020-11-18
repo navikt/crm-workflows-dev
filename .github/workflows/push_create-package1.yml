@@ -95,7 +95,7 @@ jobs:
         run: |
           sfdx force:package:install --package ${{ needs.create-package.outputs.packageId }} -w 20 -b 20 -u integration-sandbox -r -k ${{ secrets.PACKAGE_KEY }} --json | tee output
 
-          echo "::set-output name=installOutput::$(cat output)"
+          echo "::set-output name=installOutput::$(cat output | jq '.message' -r)"
           if [ $(cat output | jq '.status') == "0" ]; then
             echo "::set-output name=successfullyInstalled::true"
           fi
@@ -122,7 +122,7 @@ jobs:
             echo
             echo FAILED TO INSTALL PACKAGE IN SIT SANDBOX
             echo
-            echo ${{ needs.validate-in-sit.outputs.installOutput }} | jq '.message' -r
+            echo ${{ needs.validate-in-sit.outputs.installOutput }}
 
             exit 125
           fi
