@@ -115,6 +115,9 @@ jobs:
       - name: Report SIT Status
         run: |
           if [ ${{ needs.validate-in-sit.outputs.successfullyInstalled }} == "true" ]; then
+            echo
+            echo SUCCESSFUL INSTALLATION OF PACKAGE IN SIT SANDBOX
+            echo
           else
             echo
             echo FAILED TO INSTALL PACKAGE IN SIT SANDBOX
