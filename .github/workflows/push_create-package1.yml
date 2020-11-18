@@ -217,18 +217,19 @@ jobs:
   # ################# REPORT SIT INSTALLATION STATUS ################ #
   # ################################################################# #
   report-sit-status:
-    name: Create release
+    name: Report SIT Status
     needs: [validate-in-sit]
     runs-on: ubuntu-latest
     steps:
-      # set release variables
-      - name: Set release fields
-        id: release-fields
+      # Report SIT Status
+      - name: Report SIT Status
         run: |
-          echo ${{ needs.validate-in-sit.outputs.installOutput }}
-          if [ ${{ needs.validate-in-sit.outputs.successfullyInstalled }} != "true" ]; then
+          if [[ ${{ needs.validate-in-sit.outputs.successfullyInstalled }} != "true" ]]; then
             exit 125
+            echo
+            echo FAILED TO INSTALL PACKAGE IN SIT SANDBOX
           fi
+          echo ${{ needs.validate-in-sit.outputs.installOutput }} | jq '.message' -r
 
   # ################################################################# #
   # ######################### CREATE RELEASE ######################## #
