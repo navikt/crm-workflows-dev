@@ -51,6 +51,9 @@ jobs:
           echo "::set-output name=betaVersionNumber::$(cat sfdx-project.json | jq -r '.packageAliases | keys_unsorted[-1]' | sed 's/.*-//')"
           echo "::set-output name=codeCoverage::$( sfdx force:package:version:report -p $(echo $packageId) --json | jq -r '.result.CodeCoverage.apexCodeCoveragePercentage' )"
 
+          echo
+          echo Package ID: $packageId
+
     outputs:
       packageId: ${{ steps.package-version-create.outputs.packageId }}
       betaVersionNumber: ${{ steps.package-version-create.outputs.betaVersionNumber }}
