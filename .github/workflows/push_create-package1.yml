@@ -184,7 +184,7 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v2
 
-        # Install SFDX
+      # Install SFDX
       - name: Install SFDX
         uses: sfdx-actions/setup-sfdx@v1
 
@@ -228,11 +228,13 @@ jobs:
       - name: Report SIT Status
         run: |
           if [[ ${{ needs.validate-in-sit.outputs.successfullyInstalled }} != "true" ]]; then
-            exit 125
             echo
             echo FAILED TO INSTALL PACKAGE IN SIT SANDBOX
+            echo
+            echo ${{ needs.validate-in-sit.outputs.installOutput }} | jq '.message' -r
+
+            exit 125
           fi
-          echo ${{ needs.validate-in-sit.outputs.installOutput }} | jq '.message' -r
 
   # ################################################################# #
   # ######################### CREATE RELEASE ######################## #
