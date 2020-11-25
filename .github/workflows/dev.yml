@@ -10,4 +10,4 @@ jobs:
         uses: sfdx-actions/setup-sfdx@v1
 
       - name: test install verbose
-        run: echo y | sfdx plugins:install sfpowerkit -v
+        run: echo y | sfdx plugins:install sfpowerkit@2.4.3
