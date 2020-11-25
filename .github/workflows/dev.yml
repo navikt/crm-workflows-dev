@@ -1,0 +1,13 @@
+name: "[HELPER] Deployment"
+on:
+  workflow_dispatch:
+jobs:
+  debug:
+    name: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: test install
+        run: echo y | sfdx plugins:install sfpowerkit
+
+      - name: test install verbose
+        run: echo y | sfdx plugins:install sfpowerkit -v
