@@ -9,8 +9,5 @@ jobs:
       - name: Authorize SFDX
         uses: sfdx-actions/setup-sfdx@v1
 
-      - name: test install
-        run: echo y | sfdx plugins:install sfpowerkit
-
       - name: test install verbose
         run: echo y | sfdx plugins:install sfpowerkit -v
