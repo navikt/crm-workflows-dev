@@ -4,7 +4,7 @@ on:
 jobs:
   debug:
     name: test
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     steps:
       - name: Authorize SFDX
         uses: sfdx-actions/setup-sfdx@v1
