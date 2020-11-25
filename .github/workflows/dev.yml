@@ -6,6 +6,9 @@ jobs:
     name: test
     runs-on: ubuntu-latest
     steps:
+      - name: Authorize SFDX
+        uses: sfdx-actions/setup-sfdx@v1
+
       - name: test install
         run: echo y | sfdx plugins:install sfpowerkit
 
