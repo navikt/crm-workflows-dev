@@ -1,0 +1,13 @@
+name: "dev"
+on:
+  workflow_dispatch:
+jobs:
+  debug:
+    name: test
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Authorize SFDX
+        uses: sfdx-actions/setup-sfdx@v1
+
+      - name: test install verbose
+        run: echo y | sfdx plugins:install sfpowerkit@2.0.1
