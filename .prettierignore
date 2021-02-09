@@ -1,0 +1,16 @@
+# List files or directories below to ignore them when running prettier
+# More information: https://prettier.io/docs/en/ignore.html
+#
+
+.localdevserver
+.sfdx
+.ssdx
+.github
+.vscode
+jsconfig.json
+
+# Only prettify specifc static resources
+force-app/main/default/staticresources/*
+
+# Exclude project config (edited by CI workflow)
+sfdx-project.json
