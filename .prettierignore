@@ -3,14 +3,18 @@
 #
 
 .localdevserver
-.sfdx
 .ssdx
-.github
+.sfdx
+coverage/
 .vscode
+.github
 jsconfig.json
 
-# Only prettify specifc static resources
-force-app/main/default/staticresources/*
+**/staticresources/*
+
+# flows in permsets will break the xml
+**/permissionsets/*
+**/permissionsetgroups/*
 
 # Exclude project config (edited by CI workflow)
 sfdx-project.json
