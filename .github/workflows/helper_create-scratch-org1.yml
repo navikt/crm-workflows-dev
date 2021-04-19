@@ -110,6 +110,8 @@ jobs:
       # Print Login
       - name: Print Login
         run: |
+          echo "Instant Login URL: $(sfdx force:org:open -u scratch-org -r --json | jq -r '.result.url')"
+          echo ""
           echo "URL: $(sfdx force:user:display -u scratch-org --json | jq -r '.result.loginUrl')"
           echo "Username: $(sfdx force:user:display -u scratch-org --json | jq -r '.result.username')"
           echo "Password: $(sfdx force:user:password:generate -u scratch-org --json | jq -r '.result.password')"
