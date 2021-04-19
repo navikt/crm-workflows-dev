@@ -146,7 +146,14 @@ jobs:
       # Authenticate scratch org
       - name: Authenticate scratch org
         run: sfdx auth:sfdxurl:store -f ./SCRATCH_ORG_SFDX_AUTH_URL.txt -a scratch-org -s
+      
+      # Identiy to Git
+      - name: Identiy to Git
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
+      # Pull Metadata
       - name: Pull Metadata
         run: |
             echo "test" > force-app/test.txt
