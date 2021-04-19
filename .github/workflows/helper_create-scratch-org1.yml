@@ -99,8 +99,9 @@ jobs:
 #       - name: Authenticate scratch org
 #         run: sfdx auth:sfdxurl:store -f ./SCRATCH_ORG_SFDX_AUTH_URL.txt -a scratch-org -s
 
-delete-scratch-org:
+  delete-scratch-org:
     name: Delete Scratch Org
+    needs: create-scratch-org
     needs: pull-metadata
     runs-on: ubuntu-latest
     steps:
