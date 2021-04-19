@@ -4,8 +4,6 @@ on:
     inputs:
       branchName:
         description: "Name new branch (or choose existing above)"
-      tags:
-        description: 'Test scenario tags' 
 jobs:
   print:
     name: Print Information
@@ -14,89 +12,110 @@ jobs:
       - name: Print input values
         run: |
           echo "Branch Name: ${{ github.event.inputs.branchName }}"
+          echo "Initated Branch: ${{ github.ref }}"
           echo "Initiator: ${{ github.actor }}"
 
   create-scratch-org:
-    name: Promote Package
+    name: Create Scratch Org
     runs-on: ubuntu-latest
     steps:
       # Checkout source code
-      - name: Checkout source code from master
+      - name: Checkout source code
         uses: actions/checkout@v2
-        with:
-          persist-credentials: false
-          fetch-depth: 0 # otherwise, you will failed to push refs to dest repo
 
       # Install SFDX
-      - name: Authorize SFDX
+      - name: Install SFDX
         uses: sfdx-actions/setup-sfdx@v1
 
-      # Authenticate prod
-      - name: Authenticate prod
+      # Authenticate dev hub
+      - name: Authenticate Dev Hub
         run: |
           echo ${{ secrets.PROD_SFDX_URL}} > ./PROD_SFDX_URL.txt
           sfdx auth:sfdxurl:store -f ./PROD_SFDX_URL.txt -a devhub -d
           rm -f ./PROD_SFDX_URL.txt
 
-      # Promote package
-      - name: Promote package
-        run: sfdx force:package:version:promote --package ${{ github.event.inputs.packageId }} --noprompt
+      # Create scratch org
+      - name: Create scratch org
+        run: sfdx force:org:create -f config/project-scratch-def.json -a scratch-org -s -d 1
 
-  pull-metadata:
-    name: Pull Metadata (will continue)
+      # Set SCRATCH_ORG_SFDX_AUTH_URL.txt
+      # ! saves sfdx auth url as artifact to circumvent GitHub Actions censoring of the value (which occurs when used with job output)
+      # ! artifact is later deleted
+      - name: Set SCRATCH_ORG_SFDX_AUTH_URL.txt
+        id: set-auth-url
+        run: sfdx force:org:display -u scratch-org --verbose --json | jq '.result.sfdxAuthUrl' | sed 's/\"//g' > SCRATCH_ORG_SFDX_AUTH_URL.txt
+
+      # Upload SCRATCH_ORG_SFDX_AUTH_URL.txt
+      - name: Upload SFDX AuthUrl
+        uses: actions/upload-artifact@v2
+        with:
+          name: sfdx-auth-url
+          path: SCRATCH_ORG_SFDX_AUTH_URL.txt
+  
+  print-login:
+    name: Print Login
     needs: create-scratch-org
     runs-on: ubuntu-latest
-    needs: promote-package
     steps:
+      # Checkout source code
+      - name: Checkout source code
+        uses: actions/checkout@v2
       # Install SFDX
-      - name: Authorize SFDX
+      - name: Install SFDX
         uses: sfdx-actions/setup-sfdx@v1
-
-      # Authenticate preprod
-      - name: Authenticate preprod
-        run: |
-          echo ${{ secrets.PREPROD_SFDX_URL}} > ./PREPROD_SFDX_URL.txt
-          sfdx auth:sfdxurl:store -f ./PREPROD_SFDX_URL.txt -a preprod -s
-          rm -f ./PREPROD_SFDX_URL.txt
-
-      # Install package version to preprod
-      - name: Install package version to preprod
-        run: sfdx force:package:install --package ${{ github.event.inputs.packageId }} -w 20 -b 20 -u preprod -r -k ${{ secrets.PACKAGE_KEY }} --json
-
-      # Checkout source code
-      - name: Checkout source code from master
-        uses: actions/checkout@v2
-
-      # Deploy unpackagable content
-      - name: Deploy unpackagable content
-        run: |
-          if [ -d "./force-app/unpackagable-with-auto-deploy" ]; then
-            echo "Starting deployment of ./force-app/unpackagable-with-auto-deploy"
-            sfdx force:source:deploy -p ./force-app/unpackagable-with-auto-deploy -u preprod -l RunLocalTests
-          fi
-
-delete-scratch-org:
-    name: Promote Package
-    runs-on: ubuntu-latest
-    steps:
-      # Checkout source code
-      - name: Checkout source code from master
-        uses: actions/checkout@v2
+      # Download SCRATCH_ORG_SFDX_AUTH_URL.txt
+      - name: Download SCRATCH_ORG_SFDX_AUTH_URL.txt
+        uses: actions/download-artifact@v2
         with:
-          persist-credentials: false
-          fetch-depth: 0 # otherwise, you will failed to push refs to dest repo
-
-      # Install SFDX
-      - name: Authorize SFDX
-        uses: sfdx-actions/setup-sfdx@v1
-
-      # Authenticate prod
-      - name: Authenticate prod
+          name: sfdx-auth-url
+      # Authenticate scratch org
+      - name: Authenticate scratch org
+        run: sfdx auth:sfdxurl:store -f ./SCRATCH_ORG_SFDX_AUTH_URL.txt -a scratch-org -s
+      # Print Login
+      - name: Print Login
         run: |
-          echo ${{ secrets.PROD_SFDX_URL}} > ./PROD_SFDX_URL.txt
-          sfdx auth:sfdxurl:store -f ./PROD_SFDX_URL.txt -a devhub -d
-          rm -f ./PROD_SFDX_URL.txt
+          sfdx force:user:password:generate -u scratch-org --json
+          echo "URL: $(sfdx force:user:display -u newtimeline --json | jq -r '.result.loginUrl')"
+          echo "Username: $(sfdx force:user:display -u newtimeline --json | jq -r '.result.username')"
+          echo "Password: $(sfdx force:user:password:generate -u newtimeline --json | jq -r '.result.password')"
 
-      # Promote package
-      - name: Promote package
-        run: sfdx force:package:version:promote --package ${{ github.event.inputs.packageId }} --noprompt
+#   pull-metadata:
+#     name: Pull Metadata (will continue)
+#     needs: create-scratch-org
+#     runs-on: ubuntu-latest
+#     steps:
+#       # Checkout source code
+#       - name: Checkout source code
+#         uses: actions/checkout@v2
+#       # Install SFDX
+#       - name: Install SFDX
+#         uses: sfdx-actions/setup-sfdx@v1
+#       # Download SCRATCH_ORG_SFDX_AUTH_URL.txt
+#       - name: Download SCRATCH_ORG_SFDX_AUTH_URL.txt
+#         uses: actions/download-artifact@v2
+#         with:
+#           name: sfdx-auth-url
+#       # Authenticate scratch org
+#       - name: Authenticate scratch org
+#         run: sfdx auth:sfdxurl:store -f ./SCRATCH_ORG_SFDX_AUTH_URL.txt -a scratch-org -s
+
+
+# delete-scratch-org:
+#     name: Delete Scratch Org
+#     needs: pull-metadata
+#     runs-on: ubuntu-latest
+#     steps:
+#       # Checkout source code
+#       - name: Checkout source code
+#         uses: actions/checkout@v2
+#       # Install SFDX
+#       - name: Install SFDX
+#         uses: sfdx-actions/setup-sfdx@v1
+#       # Download SCRATCH_ORG_SFDX_AUTH_URL.txt
+#       - name: Download SCRATCH_ORG_SFDX_AUTH_URL.txt
+#         uses: actions/download-artifact@v2
+#         with:
+#           name: sfdx-auth-url
+#       # Authenticate scratch org
+#       - name: Authenticate scratch org
+#         run: sfdx auth:sfdxurl:store -f ./SCRATCH_ORG_SFDX_AUTH_URL.txt -a scratch-org -s
