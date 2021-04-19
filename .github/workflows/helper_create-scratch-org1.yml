@@ -154,10 +154,10 @@ jobs:
       - name: Pull Metadata
         run: |
             for i in {1..10}; do
-              sfdx force:source:pull -f
-              git add force-app
-              git commit -m "Added files using 'Create Scratch Org' helper on GitHub Actions" 
-              git push origin ${{ github.event.inputs.branchName }}
+              sfdx force:source:pull -f | tee output
+              git add force-app | tee output
+              git commit -m "Added files using 'Create Scratch Org' helper on GitHub Actions"  | tee output
+              git push origin ${{ github.event.inputs.branchName }} | tee output
 
               echo "Sleeping 30 seconds"
               sleep 30
