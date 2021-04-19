@@ -153,14 +153,17 @@ jobs:
       # Pull Metadata
       - name: Pull Metadata
         run: |
-            echo "test" > force-app/test.txt
-            git add force-app
-            git commit -m "Added files using 'Create Scratch Org' helper on GitHub Actions" 
-            git push origin ${{ github.event.inputs.branchName }}
-  # for i in {1..10}; do
-  #   sfdx force:source:pull -f
-  #   sleep 5
-  # done
+            for i in {1..10}; do
+              sfdx force:source:pull -f
+              git add force-app
+              git commit -m "Added files using 'Create Scratch Org' helper on GitHub Actions" 
+              git push origin ${{ github.event.inputs.branchName }}
+
+              echo "Sleeping 30 seconds"
+              sleep 30
+              echo 
+              echo "\n----------------------------------"
+            done
 
   delete-scratch-org:
     name: Delete Scratch Org
