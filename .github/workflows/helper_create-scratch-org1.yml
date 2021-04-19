@@ -181,15 +181,16 @@ jobs:
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          rm -f ./SCRATCH_ORG_SFDX_AUTH_URL.txt
 
       # Pull Metadata
       - name: Pull Metadata
         run: |
             for i in {1..10}; do
-              sfdx force:source:pull -f --json | tee output
-              git add force-app > 
-              git commit -m "Added files using 'Create Scratch Org' helper on GitHub Actions"  | tee output
-              git push origin ${{ needs.branch.outputs.branch }} | tee output
+              sfdx force:source:pull -f --json
+              git add force-app &> /dev/null
+              git diff-index --quiet HEAD || git commit -m "Added files using 'Create Scratch Org' helper on GitHub Actions" --no-verify
+              git push origin ${{ needs.branch.outputs.branch }} &> /dev/null
 
               echo "Sleeping 30 seconds"
               sleep 30
