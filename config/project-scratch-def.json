@@ -7,9 +7,6 @@
     "country": "NO",
     "language": "en_US",
     "settings": {
-        "communitiesSettings": {
-            "enableNetworksEnabled": true
-        },
         "lightningExperienceSettings": {
             "enableS1DesktopEnabled": true
         },
