@@ -99,23 +99,25 @@ jobs:
 #       - name: Authenticate scratch org
 #         run: sfdx auth:sfdxurl:store -f ./SCRATCH_ORG_SFDX_AUTH_URL.txt -a scratch-org -s
 
-
-# delete-scratch-org:
-#     name: Delete Scratch Org
-#     needs: pull-metadata
-#     runs-on: ubuntu-latest
-#     steps:
-#       # Checkout source code
-#       - name: Checkout source code
-#         uses: actions/checkout@v2
-#       # Install SFDX
-#       - name: Install SFDX
-#         uses: sfdx-actions/setup-sfdx@v1
-#       # Download SCRATCH_ORG_SFDX_AUTH_URL.txt
-#       - name: Download SCRATCH_ORG_SFDX_AUTH_URL.txt
-#         uses: actions/download-artifact@v2
-#         with:
-#           name: sfdx-auth-url
-#       # Authenticate scratch org
-#       - name: Authenticate scratch org
-#         run: sfdx auth:sfdxurl:store -f ./SCRATCH_ORG_SFDX_AUTH_URL.txt -a scratch-org -s
+delete-scratch-org:
+    name: Delete Scratch Org
+    needs: pull-metadata
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout source code
+      - name: Checkout source code
+        uses: actions/checkout@v2
+      # Install SFDX
+      - name: Install SFDX
+        uses: sfdx-actions/setup-sfdx@v1
+      # Download SCRATCH_ORG_SFDX_AUTH_URL.txt
+      - name: Download SCRATCH_ORG_SFDX_AUTH_URL.txt
+        uses: actions/download-artifact@v2
+        with:
+          name: sfdx-auth-url
+      # Authenticate scratch org
+      - name: Authenticate scratch org
+        run: sfdx auth:sfdxurl:store -f ./SCRATCH_ORG_SFDX_AUTH_URL.txt -a scratch-org -s
+      # Delete Scratch org
+      - name: Delete Scratch Org
+        run: sfdx force:org:delete -u scratch-org -p
