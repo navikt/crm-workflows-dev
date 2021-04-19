@@ -1,0 +1,102 @@
+name: "[HELPER] Create Scratch Org"
+on:
+  workflow_dispatch:
+    inputs:
+      branchName:
+        description: "Name new branch (or choose existing above)"
+      tags:
+        description: 'Test scenario tags' 
+jobs:
+  print:
+    name: Print Information
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print input values
+        run: |
+          echo "Branch Name: ${{ github.event.inputs.branchName }}"
+          echo "Initiator: ${{ github.actor }}"
+
+  create-scratch-org:
+    name: Promote Package
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout source code
+      - name: Checkout source code from master
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+          fetch-depth: 0 # otherwise, you will failed to push refs to dest repo
+
+      # Install SFDX
+      - name: Authorize SFDX
+        uses: sfdx-actions/setup-sfdx@v1
+
+      # Authenticate prod
+      - name: Authenticate prod
+        run: |
+          echo ${{ secrets.PROD_SFDX_URL}} > ./PROD_SFDX_URL.txt
+          sfdx auth:sfdxurl:store -f ./PROD_SFDX_URL.txt -a devhub -d
+          rm -f ./PROD_SFDX_URL.txt
+
+      # Promote package
+      - name: Promote package
+        run: sfdx force:package:version:promote --package ${{ github.event.inputs.packageId }} --noprompt
+
+  pull-metadata:
+    name: Pull Metadata (will continue)
+    needs: create-scratch-org
+    runs-on: ubuntu-latest
+    needs: promote-package
+    steps:
+      # Install SFDX
+      - name: Authorize SFDX
+        uses: sfdx-actions/setup-sfdx@v1
+
+      # Authenticate preprod
+      - name: Authenticate preprod
+        run: |
+          echo ${{ secrets.PREPROD_SFDX_URL}} > ./PREPROD_SFDX_URL.txt
+          sfdx auth:sfdxurl:store -f ./PREPROD_SFDX_URL.txt -a preprod -s
+          rm -f ./PREPROD_SFDX_URL.txt
+
+      # Install package version to preprod
+      - name: Install package version to preprod
+        run: sfdx force:package:install --package ${{ github.event.inputs.packageId }} -w 20 -b 20 -u preprod -r -k ${{ secrets.PACKAGE_KEY }} --json
+
+      # Checkout source code
+      - name: Checkout source code from master
+        uses: actions/checkout@v2
+
+      # Deploy unpackagable content
+      - name: Deploy unpackagable content
+        run: |
+          if [ -d "./force-app/unpackagable-with-auto-deploy" ]; then
+            echo "Starting deployment of ./force-app/unpackagable-with-auto-deploy"
+            sfdx force:source:deploy -p ./force-app/unpackagable-with-auto-deploy -u preprod -l RunLocalTests
+          fi
+
+delete-scratch-org:
+    name: Promote Package
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout source code
+      - name: Checkout source code from master
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+          fetch-depth: 0 # otherwise, you will failed to push refs to dest repo
+
+      # Install SFDX
+      - name: Authorize SFDX
+        uses: sfdx-actions/setup-sfdx@v1
+
+      # Authenticate prod
+      - name: Authenticate prod
+        run: |
+          echo ${{ secrets.PROD_SFDX_URL}} > ./PROD_SFDX_URL.txt
+          sfdx auth:sfdxurl:store -f ./PROD_SFDX_URL.txt -a devhub -d
+          rm -f ./PROD_SFDX_URL.txt
+
+      # Promote package
+      - name: Promote package
+        run: sfdx force:package:version:promote --package ${{ github.event.inputs.packageId }} --noprompt
