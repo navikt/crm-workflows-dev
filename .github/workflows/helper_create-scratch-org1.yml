@@ -19,58 +19,87 @@ jobs:
     name: Create Scratch Org
     runs-on: ubuntu-latest
     steps:
+      
       # Checkout source code
       - name: Checkout source code
         uses: actions/checkout@v2
-
+      
       # Install SFDX
       - name: Install SFDX
         uses: sfdx-actions/setup-sfdx@v1
-
+      
       # Authenticate dev hub
       - name: Authenticate Dev Hub
         run: |
           echo ${{ secrets.PROD_SFDX_URL}} > ./PROD_SFDX_URL.txt
           sfdx auth:sfdxurl:store -f ./PROD_SFDX_URL.txt -a devhub -d
           rm -f ./PROD_SFDX_URL.txt
-
+      
       # Create scratch org
       - name: Create scratch org
         run: sfdx force:org:create -f config/project-scratch-def.json -a scratch-org -s -d 1
-
+      
       # Set SCRATCH_ORG_SFDX_AUTH_URL.txt
       # ! saves sfdx auth url as artifact to circumvent GitHub Actions censoring of the value (which occurs when used with job output)
       # ! artifact is later deleted
       - name: Set SCRATCH_ORG_SFDX_AUTH_URL.txt
         id: set-auth-url
-        run: sfdx force:org:display -u scratch-org --verbose --json | jq '.result.sfdxAuthUrl' | sed 's/\"//g' > SCRATCH_ORG_SFDX_AUTH_URL.txt
-
+        run: sfdx force:org:display -u scratch-org --verbose --json | jq -r '.result.sfdxAuthUrl' > SCRATCH_ORG_SFDX_AUTH_URL.txt
+      
       # Upload SCRATCH_ORG_SFDX_AUTH_URL.txt
       - name: Upload SFDX AuthUrl
         uses: actions/upload-artifact@v2
         with:
           name: sfdx-auth-url
           path: SCRATCH_ORG_SFDX_AUTH_URL.txt
+      
+      # Install sfpowerkit plugin used to install multiple packages only by version number
+      - name: Install sfpowerkit plugin
+        run: echo y | sfdx plugins:install sfpowerkit@2.0.1
+
+      # Get package keys
+      - name: Get package keys
+        id: install-keys
+        run: |
+          keys=""
+          for p in $(jq '.result | .[].Name' -r <<< "$(sfdx force:package:list --json)"); do
+              keys+=$p":${{ secrets.PACKAGE_KEY }} "
+          done
+
+          echo "::set-output name=keys::$(echo $keys)"
+      
+      # Install packages this repo is dependant on
+      - name: Install dependant packages
+        run: sfdx sfpowerkit:package:dependencies:install -u scratch-org -r -a -w 60 -k '${{ steps.install-keys.outputs.keys }}'
+      
+      # Deploy source to scratch org
+      - name: Push source to scratch org
+        run: sfdx force:source:push
   
   print-login:
     name: Print Login
     needs: create-scratch-org
     runs-on: ubuntu-latest
     steps:
+      
       # Checkout source code
       - name: Checkout source code
         uses: actions/checkout@v2
+      
       # Install SFDX
       - name: Install SFDX
         uses: sfdx-actions/setup-sfdx@v1
+      
       # Download SCRATCH_ORG_SFDX_AUTH_URL.txt
       - name: Download SCRATCH_ORG_SFDX_AUTH_URL.txt
         uses: actions/download-artifact@v2
         with:
           name: sfdx-auth-url
+      
       # Authenticate scratch org
       - name: Authenticate scratch org
         run: sfdx auth:sfdxurl:store -f ./SCRATCH_ORG_SFDX_AUTH_URL.txt -a scratch-org -s
+      
       # Print Login
       - name: Print Login
         run: |
@@ -79,25 +108,30 @@ jobs:
           echo "Username: $(sfdx force:user:display -u newtimeline --json | jq -r '.result.username')"
           echo "Password: $(sfdx force:user:password:generate -u newtimeline --json | jq -r '.result.password')"
 
-#   pull-metadata:
-#     name: Pull Metadata (will continue)
-#     needs: create-scratch-org
-#     runs-on: ubuntu-latest
-#     steps:
-#       # Checkout source code
-#       - name: Checkout source code
-#         uses: actions/checkout@v2
-#       # Install SFDX
-#       - name: Install SFDX
-#         uses: sfdx-actions/setup-sfdx@v1
-#       # Download SCRATCH_ORG_SFDX_AUTH_URL.txt
-#       - name: Download SCRATCH_ORG_SFDX_AUTH_URL.txt
-#         uses: actions/download-artifact@v2
-#         with:
-#           name: sfdx-auth-url
-#       # Authenticate scratch org
-#       - name: Authenticate scratch org
-#         run: sfdx auth:sfdxurl:store -f ./SCRATCH_ORG_SFDX_AUTH_URL.txt -a scratch-org -s
+
+      #   pull-metadata:
+      #     name: Pull Metadata (will continue)
+      #     needs: create-scratch-org
+      #     runs-on: ubuntu-latest
+      #     steps:
+      #       
+      # Checkout source code
+      #       - name: Checkout source code
+      #         uses: actions/checkout@v2
+      #       
+      # Install SFDX
+      #       - name: Install SFDX
+      #         uses: sfdx-actions/setup-sfdx@v1
+      #       
+      # Download SCRATCH_ORG_SFDX_AUTH_URL.txt
+      #       - name: Download SCRATCH_ORG_SFDX_AUTH_URL.txt
+      #         uses: actions/download-artifact@v2
+      #         with:
+      #           name: sfdx-auth-url
+      #       
+      # Authenticate scratch org
+      #       - name: Authenticate scratch org
+      #         run: sfdx auth:sfdxurl:store -f ./SCRATCH_ORG_SFDX_AUTH_URL.txt -a scratch-org -s
 
   delete-scratch-org:
     name: Delete Scratch Org
@@ -105,20 +139,28 @@ jobs:
     # needs: pull-metadata
     runs-on: ubuntu-latest
     steps:
+      
       # Checkout source code
       - name: Checkout source code
         uses: actions/checkout@v2
+      
       # Install SFDX
       - name: Install SFDX
         uses: sfdx-actions/setup-sfdx@v1
+      
       # Download SCRATCH_ORG_SFDX_AUTH_URL.txt
       - name: Download SCRATCH_ORG_SFDX_AUTH_URL.txt
         uses: actions/download-artifact@v2
         with:
           name: sfdx-auth-url
+      
+      - name: test
+        run: cat ./SCRATCH_ORG_SFDX_AUTH_URL.txt
+
       # Authenticate scratch org
       - name: Authenticate scratch org
         run: sfdx auth:sfdxurl:store -f ./SCRATCH_ORG_SFDX_AUTH_URL.txt -a scratch-org -s
+      
       # Delete Scratch org
       - name: Delete Scratch Org
         run: sfdx force:org:delete -u scratch-org -p
