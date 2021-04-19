@@ -122,13 +122,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-      # Create branch
-      - name: Create branch
-        run: git checkout -B ${{ github.event.inputs.branchName }}
-      
       # Checkout source code
       - name: Checkout source code
         uses: actions/checkout@v2
+
+      # Create branch
+      - name: Create branch
+        run: git checkout -B ${{ github.event.inputs.branchName }}
 
       # Install SFDX
       - name: Install SFDX
@@ -190,9 +190,6 @@ jobs:
         with:
           name: sfdx-auth-url
       
-      - name: test
-        run: cat ./SCRATCH_ORG_SFDX_AUTH_URL.txt
-
       # Authenticate scratch org
       - name: Authenticate scratch org
         run: sfdx auth:sfdxurl:store -f ./SCRATCH_ORG_SFDX_AUTH_URL.txt -a scratch-org -s
