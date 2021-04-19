@@ -81,7 +81,7 @@ jobs:
     needs: create-scratch-org
     runs-on: ubuntu-latest
     steps:
-      
+    
       # Checkout source code
       - name: Checkout source code
         uses: actions/checkout@v2
@@ -89,6 +89,13 @@ jobs:
       # Install SFDX
       - name: Install SFDX
         uses: sfdx-actions/setup-sfdx@v1
+
+      # Authenticate dev hub
+      - name: Authenticate Dev Hub
+        run: |
+          echo ${{ secrets.PROD_SFDX_URL}} > ./PROD_SFDX_URL.txt
+          sfdx auth:sfdxurl:store -f ./PROD_SFDX_URL.txt -a devhub -d
+          rm -f ./PROD_SFDX_URL.txt
       
       # Download SCRATCH_ORG_SFDX_AUTH_URL.txt
       - name: Download SCRATCH_ORG_SFDX_AUTH_URL.txt
@@ -108,35 +115,52 @@ jobs:
           echo "Username: $(sfdx force:user:display -u newtimeline --json | jq -r '.result.username')"
           echo "Password: $(sfdx force:user:password:generate -u newtimeline --json | jq -r '.result.password')"
 
+  pull-metadata:
+    name: Pull Metadata (will continue)
+    needs: create-scratch-org
+    runs-on: ubuntu-latest
+    steps:
 
-      #   pull-metadata:
-      #     name: Pull Metadata (will continue)
-      #     needs: create-scratch-org
-      #     runs-on: ubuntu-latest
-      #     steps:
-      #       
+      # Create branch
+      - name: Create branch
+        uses: peterjgrainger/action-create-branch@v2.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          branch: ${{ github.event.inputs.branchName }}
+            
       # Checkout source code
-      #       - name: Checkout source code
-      #         uses: actions/checkout@v2
-      #       
+      - name: Checkout source code
+        uses: actions/checkout@v2
+            
       # Install SFDX
-      #       - name: Install SFDX
-      #         uses: sfdx-actions/setup-sfdx@v1
-      #       
+      - name: Install SFDX
+        uses: sfdx-actions/setup-sfdx@v1
+            
       # Download SCRATCH_ORG_SFDX_AUTH_URL.txt
-      #       - name: Download SCRATCH_ORG_SFDX_AUTH_URL.txt
-      #         uses: actions/download-artifact@v2
-      #         with:
-      #           name: sfdx-auth-url
-      #       
+      - name: Download SCRATCH_ORG_SFDX_AUTH_URL.txt
+        uses: actions/download-artifact@v2
+        with:
+          name: sfdx-auth-url
+            
       # Authenticate scratch org
-      #       - name: Authenticate scratch org
-      #         run: sfdx auth:sfdxurl:store -f ./SCRATCH_ORG_SFDX_AUTH_URL.txt -a scratch-org -s
+      - name: Authenticate scratch org
+        run: sfdx auth:sfdxurl:store -f ./SCRATCH_ORG_SFDX_AUTH_URL.txt -a scratch-org -s
+
+      - name: Pull Metadata
+        run: |
+            echo "test" > force-app/test.txt
+            git add force-app
+            git commit -m "Added files using 'Create Scratch Org' helper on GitHub Actions" 
+            git push
+  # for i in {1..10}; do
+  #   sfdx force:source:pull -f
+  #   sleep 5
+  # done
 
   delete-scratch-org:
     name: Delete Scratch Org
-    needs: create-scratch-org
-    # needs: pull-metadata
+    needs: pull-metadata
     runs-on: ubuntu-latest
     steps:
       
@@ -147,6 +171,13 @@ jobs:
       # Install SFDX
       - name: Install SFDX
         uses: sfdx-actions/setup-sfdx@v1
+
+      # Authenticate dev hub
+      - name: Authenticate Dev Hub
+        run: |
+          echo ${{ secrets.PROD_SFDX_URL}} > ./PROD_SFDX_URL.txt
+          sfdx auth:sfdxurl:store -f ./PROD_SFDX_URL.txt -a devhub -d
+          rm -f ./PROD_SFDX_URL.txt
       
       # Download SCRATCH_ORG_SFDX_AUTH_URL.txt
       - name: Download SCRATCH_ORG_SFDX_AUTH_URL.txt
