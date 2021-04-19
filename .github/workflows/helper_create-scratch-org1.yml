@@ -102,7 +102,7 @@ jobs:
   delete-scratch-org:
     name: Delete Scratch Org
     needs: create-scratch-org
-    needs: pull-metadata
+    # needs: pull-metadata
     runs-on: ubuntu-latest
     steps:
       # Checkout source code
