@@ -15,6 +15,25 @@ jobs:
           echo "Initated Branch: ${{ github.ref }}"
           echo "Initiator: ${{ github.actor }}"
 
+  branch:
+    name: Set Branch
+    runs-on: ubuntu-latest
+    steps:
+      
+      # Set Branch
+      - name: Set Branch
+        id: branch
+        run: |
+          if [ ${{ github.event.inputs.branchName }} != "" ]; then
+            echo "::set-output name=branch::$(echo ${{ github.event.inputs.branchName }})"
+            echo "'${{ github.event.inputs.branchName }}' was set as branch"
+          else
+            echo "::set-output name=branch::${GITHUB_REF/refs\/tags\//}"
+            echo "'${GITHUB_REF/refs\/tags\//}' was set as branch"
+          fi
+    outputs:
+      branch: ${{ steps.branch.outputs.branch }}
+
   create-scratch-org:
     name: Create Scratch Org
     runs-on: ubuntu-latest
@@ -85,6 +104,12 @@ jobs:
       # Checkout source code
       - name: Checkout source code
         uses: actions/checkout@v2
+  
+      # Download SCRATCH_ORG_SFDX_AUTH_URL.txt
+      - name: Download SCRATCH_ORG_SFDX_AUTH_URL.txt
+        uses: actions/download-artifact@v2
+        with:
+          name: sfdx-auth-url
       
       # Install SFDX
       - name: Install SFDX
@@ -96,29 +121,36 @@ jobs:
           echo ${{ secrets.PROD_SFDX_URL}} > ./PROD_SFDX_URL.txt
           sfdx auth:sfdxurl:store -f ./PROD_SFDX_URL.txt -a devhub -d
           rm -f ./PROD_SFDX_URL.txt
-      
-      # Download SCRATCH_ORG_SFDX_AUTH_URL.txt
-      - name: Download SCRATCH_ORG_SFDX_AUTH_URL.txt
-        uses: actions/download-artifact@v2
-        with:
-          name: sfdx-auth-url
-      
-      # Authenticate scratch org
-      - name: Authenticate scratch org
-        run: sfdx auth:sfdxurl:store -f ./SCRATCH_ORG_SFDX_AUTH_URL.txt -a scratch-org -s
-      
+
+          sfdx auth:sfdxurl:store -f ./SCRATCH_ORG_SFDX_AUTH_URL.txt -a scratch-org -s
+
       # Print Login
       - name: Print Login
         run: |
+          echo ""
+          echo ""
+          echo ""
+          echo ""
+          echo ""
+          echo ""
+          echo ""
+          echo ""
+          echo ""
           echo "Instant Login URL: $(sfdx force:org:open -u scratch-org -r --json | jq -r '.result.url')"
           echo ""
           echo "URL: $(sfdx force:user:display -u scratch-org --json | jq -r '.result.loginUrl')"
           echo "Username: $(sfdx force:user:display -u scratch-org --json | jq -r '.result.username')"
           echo "Password: $(sfdx force:user:password:generate -u scratch-org --json | jq -r '.result.password')"
+          echo ""
+          echo ""
+          echo ""
+          echo ""
+          echo ""
+          echo ""
 
   pull-metadata:
     name: Pull Metadata
-    needs: create-scratch-org
+    needs: [create-scratch-org, branch]
     runs-on: ubuntu-latest
     steps:
 
@@ -128,7 +160,7 @@ jobs:
 
       # Create branch
       - name: Create branch
-        run: git checkout -B ${{ github.event.inputs.branchName }}
+        run: git checkout -B ${{ needs.branch.outputs.branch }}
 
       # Install SFDX
       - name: Install SFDX
@@ -154,15 +186,15 @@ jobs:
       - name: Pull Metadata
         run: |
             for i in {1..10}; do
-              sfdx force:source:pull -f | tee output
-              git add force-app | tee output
+              sfdx force:source:pull -f --json | tee output
+              git add force-app > 
               git commit -m "Added files using 'Create Scratch Org' helper on GitHub Actions"  | tee output
-              git push origin ${{ github.event.inputs.branchName }} | tee output
+              git push origin ${{ needs.branch.outputs.branch }} | tee output
 
               echo "Sleeping 30 seconds"
               sleep 30
-              echo 
-              echo "\n----------------------------------"
+              echo ""
+              echo "----------------------------------"
             done
 
   delete-scratch-org:
