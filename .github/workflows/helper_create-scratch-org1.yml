@@ -76,6 +76,24 @@ jobs:
       - name: Push source to scratch org
         run: sfdx force:source:push
   
+  list:
+    name: list
+    runs-on: ubuntu-latest
+    steps:
+      # Install SFDX
+      - name: Install SFDX
+        uses: sfdx-actions/setup-sfdx@v1
+
+      # Authenticate dev hub
+      - name: Authenticate Dev Hub
+        run: |
+          echo ${{ secrets.PROD_SFDX_URL}} > ./PROD_SFDX_URL.txt
+          sfdx auth:sfdxurl:store -f ./PROD_SFDX_URL.txt -a devhub -d
+          rm -f ./PROD_SFDX_URL.txt
+
+          sfdx force:org:list
+      
+
   print-login:
     name: Print Login
     needs: create-scratch-org
