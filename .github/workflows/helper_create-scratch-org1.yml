@@ -6,7 +6,7 @@ on:
         description: "Name new branch (or choose existing above)"
 jobs:
   print:
-    name: Print Information
+    name: Print Parameters
     runs-on: ubuntu-latest
     steps:
       - name: Print input values
@@ -115,7 +115,7 @@ jobs:
           echo "Password: $(sfdx force:user:password:generate -u scratch-org --json | jq -r '.result.password')"
 
   pull-metadata:
-    name: Pull Metadata (will continue)
+    name: Pull Metadata
     needs: create-scratch-org
     runs-on: ubuntu-latest
     steps:
