@@ -127,11 +127,15 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           branch: ${{ github.event.inputs.branchName }}
-            
+      
       # Checkout source code
       - name: Checkout source code
         uses: actions/checkout@v2
-            
+
+      # Change Branch
+      - name: Change Branch
+        run: git checkout ${{ github.event.inputs.branchName }}
+
       # Install SFDX
       - name: Install SFDX
         uses: sfdx-actions/setup-sfdx@v1
