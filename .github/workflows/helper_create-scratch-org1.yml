@@ -5,16 +5,7 @@ on:
       branchName:
         description: "New branch (or pick existing above)"
 jobs:
-  print:
-    name: Print Parameters
-    runs-on: ubuntu-latest
-    steps:
-      - name: Print input values
-        run: |
-          echo "Branch Name: ${{ github.event.inputs.branchName }}"
-          echo "Initated Branch: ${{ github.ref }}"
-          echo "Initiator: ${{ github.actor }}"
-
+  
   setup:
     name: Create Scratch Org
     runs-on: ubuntu-latest
@@ -31,7 +22,7 @@ jobs:
             echo "::set-output name=branch::$(echo ${{ github.event.inputs.branchName }})"
             echo "'${{ github.event.inputs.branchName }}' was set as branch"
           elif [ ${GITHUB_REF/refs\/tags\//} == "master" ] || [ ${GITHUB_REF/refs\/tags\//} == "main" ]; then
-            echo "\u001b[31;1mYou didn't type a branch name and left the default main/master branch in the dropdown menu. You cannot push changes directly to master, please use a separate branch.\u001b[0m"
+            echo "\033[0;31mYou didn't type a branch name and left the default main/master branch in the dropdown menu. You cannot push changes directly to master, please use a separate branch.\033[0m"
             exit 125
           else
             echo "::set-output name=branch::${GITHUB_REF/refs\/tags\//}"
@@ -100,12 +91,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     
-      # Checkout source code
-      - name: Checkout source code
+      # Checkout
+      - name: Checkout
         uses: actions/checkout@v2
   
-      # Download SCRATCH_ORG_SFDX_AUTH_URL.txt
-      - name: Download SCRATCH_ORG_SFDX_AUTH_URL.txt
+      # Prepare to Authenticate
+      - name: Prepare to Authenticate
         uses: actions/download-artifact@v2
         with:
           name: sfdx-auth-url
@@ -137,11 +128,11 @@ jobs:
           echo ""
           echo ""
           echo ""
-          echo "\u001b[32;1mInstant Login URL: $(sfdx force:org:open -u scratch-org -r --json | jq -r '.result.url')\u001b[0m"
+          echo "\033[0;31mInstant Login URL: $(sfdx force:org:open -u scratch-org -r --json | jq -r '.result.url')\033[0m"
           echo ""
-          echo "\u001b[34;1mURL:\u001b[0m       $(sfdx force:user:display -u scratch-org --json | jq -r '.result.loginUrl')"
-          echo "\u001b[34;1mUsername:\u001b[0m: \u001b[4m$(sfdx force:user:display -u scratch-org --json | jq -r '.result.username')\u001b[0m"
-          echo "\u001b[34;1mPassword:\u001b[0m: \u001b[4m$(sfdx force:user:password:generate -u scratch-org --json | jq -r '.result.password')\u001b[0m"
+          echo "\033[0;34mURL:\033[0m       $(sfdx force:user:display -u scratch-org --json | jq -r '.result.loginUrl')"
+          echo "\033[0;34mUsername:\033[0m: (sfdx force:user:display -u scratch-org --json | jq -r '.result.username')"
+          echo "\033[0;34mPassword:\033[0m: (sfdx force:user:password:generate -u scratch-org --json | jq -r '.result.password')"
           echo ""
           echo ""
           echo ""
@@ -191,7 +182,7 @@ jobs:
               sfdx force:source:pull -f --json
               git add force-app &> /dev/null
               git diff-index --quiet HEAD || git commit -m "Added files using 'Create Scratch Org' helper on GitHub Actions" --no-verify
-              git push origin ${{ needs.branch.outputs.branch }} &> /dev/null
+              git push origin ${{ needs.setup.outputs.branch }} &> /dev/null
 
               echo "Sleeping 30 seconds"
               sleep 30
