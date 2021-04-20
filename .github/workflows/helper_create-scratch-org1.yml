@@ -194,9 +194,9 @@ jobs:
                 
                 echo ""
                 echo "Pushing Metadata to branch '${{ needs.setup.outputs.branch }}'"
-                git add force-app &> /dev/null
-                git diff-index --quiet HEAD || git commit -m "Added files using 'Create Scratch Org' helper on GitHub Actions" --no-verify &> /dev/null
-                git push origin ${{ needs.setup.outputs.branch }} &> /dev/null
+                add=$(git add force-app)
+                commit=$(git commit -m "Added files using 'Create Scratch Org' helper on GitHub Actions" --no-verify)
+                push=$(git push origin ${{ needs.setup.outputs.branch }})
                 echo "::debug::Done. You can create a Pull Request here: https://github.com/navikt/crm-workflows-dev/compare/${{ needs.setup.outputs.branch }}?expand=1"
               else
                 echo "No new metadata found."
