@@ -6,6 +6,16 @@ on:
         description: "New branch (or pick existing above)"
 jobs:
   
+    print:
+    name: Print Parameters
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print input values
+        run: |
+          echo "Branch Name: ${{ github.event.inputs.branchName }}"
+          echo "Initated Branch: ${{ github.ref }}"
+          echo "Initiator: ${{ github.actor }}"
+
   setup:
     name: Create Scratch Org
     runs-on: ubuntu-latest
