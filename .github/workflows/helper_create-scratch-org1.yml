@@ -34,6 +34,10 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v2
       
+      # Create/Set branch
+      - name: Create/Set branch
+        run: git pull && git checkout -B ${{ steps.branch.outputs.branch }}
+
       # Install SFDX
       - name: Install SFDX
         uses: sfdx-actions/setup-sfdx@v1
@@ -137,8 +141,8 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v2
 
-      # Create branch
-      - name: Create branch
+      # Create/Set branch
+      - name: Create/Set branch
         run: git pull && git checkout -B ${{ needs.setup.outputs.branch }}
 
       # Install SFDX
