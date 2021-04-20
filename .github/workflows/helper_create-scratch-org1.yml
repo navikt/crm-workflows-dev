@@ -22,7 +22,8 @@ jobs:
             echo "::set-output name=branch::$(echo ${{ github.event.inputs.branchName }})"
             echo "'${{ github.event.inputs.branchName }}' was set as branch"
           elif [ ${GITHUB_REF/refs\/tags\//} == "master" ] || [ ${GITHUB_REF/refs\/tags\//} == "main" ]; then
-            echo "\033[0;31mYou didn't type a branch name and left the default main/master branch in the dropdown menu. You cannot push changes directly to master, please use a separate branch.\033[0m"
+            echo ""
+            echo "You didn't type a branch name and left the default main/master branch in the dropdown menu. You cannot push changes directly to master, please use a separate branch."
             exit 125
           else
             echo "::set-output name=branch::${GITHUB_REF/refs\/tags\//}"
@@ -120,25 +121,11 @@ jobs:
       - name: Click here to login
         run: |
           echo ""
+          echo "Instant Login URL: $(sfdx force:org:open -u scratch-org -r --json | jq -r '.result.url')"
           echo ""
-          echo ""
-          echo ""
-          echo ""
-          echo ""
-          echo ""
-          echo ""
-          echo ""
-          echo "\033[0;31mInstant Login URL: $(sfdx force:org:open -u scratch-org -r --json | jq -r '.result.url')\033[0m"
-          echo ""
-          echo "\033[0;34mURL:\033[0m       $(sfdx force:user:display -u scratch-org --json | jq -r '.result.loginUrl')"
-          echo "\033[0;34mUsername:\033[0m: (sfdx force:user:display -u scratch-org --json | jq -r '.result.username')"
-          echo "\033[0;34mPassword:\033[0m: (sfdx force:user:password:generate -u scratch-org --json | jq -r '.result.password')"
-          echo ""
-          echo ""
-          echo ""
-          echo ""
-          echo ""
-          echo ""
+          echo "URL:       $(sfdx force:user:display -u scratch-org --json | jq -r '.result.loginUrl')"
+          echo "Username: (sfdx force:user:display -u scratch-org --json | jq -r '.result.username')"
+          echo "Password: (sfdx force:user:password:generate -u scratch-org --json | jq -r '.result.password')"
 
   pull-metadata:
     name: Pull Metadata
