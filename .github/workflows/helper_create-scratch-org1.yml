@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       branchName:
-        description: "Name new branch (or choose existing above)"
+        description: "New branch (or pick existing above)"
 jobs:
   print:
     name: Print Parameters
@@ -15,30 +15,29 @@ jobs:
           echo "Initated Branch: ${{ github.ref }}"
           echo "Initiator: ${{ github.actor }}"
 
-  branch:
-    name: Set Branch
+  setup:
+    name: Create Scratch Org
     runs-on: ubuntu-latest
+    outputs:
+      branch: ${{ steps.branch.outputs.branch }}
     steps:
       
       # Set Branch
       - name: Set Branch
         id: branch
         run: |
+          # if 
           if [ ${{ github.event.inputs.branchName }} != "" ]; then
             echo "::set-output name=branch::$(echo ${{ github.event.inputs.branchName }})"
             echo "'${{ github.event.inputs.branchName }}' was set as branch"
+          elif [ ${GITHUB_REF/refs\/tags\//} == "master" ] || [ ${GITHUB_REF/refs\/tags\//} == "main" ]; then
+            echo "\u001b[31;1mYou didn't type a branch name and left the default main/master branch in the dropdown menu. You cannot push changes directly to master, please use a separate branch.\u001b[0m"
+            exit 125
           else
             echo "::set-output name=branch::${GITHUB_REF/refs\/tags\//}"
             echo "'${GITHUB_REF/refs\/tags\//}' was set as branch"
           fi
-    outputs:
-      branch: ${{ steps.branch.outputs.branch }}
 
-  create-scratch-org:
-    name: Create Scratch Org
-    runs-on: ubuntu-latest
-    steps:
-      
       # Checkout source code
       - name: Checkout source code
         uses: actions/checkout@v2
@@ -95,9 +94,9 @@ jobs:
       - name: Push source to scratch org
         run: sfdx force:source:push
   
-  print-login:
-    name: Print Login
-    needs: create-scratch-org
+  login:
+    name: Click here to login
+    needs: setup
     runs-on: ubuntu-latest
     steps:
     
@@ -111,21 +110,23 @@ jobs:
         with:
           name: sfdx-auth-url
       
-      # Install SFDX
-      - name: Install SFDX
-        uses: sfdx-actions/setup-sfdx@v1
-
-      # Authenticate dev hub
-      - name: Authenticate Dev Hub
+      # Authenticate
+      - name: Authenticate
         run: |
+          
+          wget https://developer.salesforce.com/media/salesforce-cli/sfdx-linux-amd64.tar.xz
+          mkdir sfdx-cli
+          tar xJf sfdx-linux-amd64.tar.xz -C sfdx-cli --strip-components 1
+          ./sfdx-cli/install
+          
           echo ${{ secrets.PROD_SFDX_URL}} > ./PROD_SFDX_URL.txt
           sfdx auth:sfdxurl:store -f ./PROD_SFDX_URL.txt -a devhub -d
           rm -f ./PROD_SFDX_URL.txt
 
           sfdx auth:sfdxurl:store -f ./SCRATCH_ORG_SFDX_AUTH_URL.txt -a scratch-org -s
 
-      # Print Login
-      - name: Print Login
+      # Click here to login
+      - name: Click here to login
         run: |
           echo ""
           echo ""
@@ -136,11 +137,11 @@ jobs:
           echo ""
           echo ""
           echo ""
-          echo "Instant Login URL: $(sfdx force:org:open -u scratch-org -r --json | jq -r '.result.url')"
+          echo "\u001b[32;1mInstant Login URL: $(sfdx force:org:open -u scratch-org -r --json | jq -r '.result.url')\u001b[0m"
           echo ""
-          echo "URL: $(sfdx force:user:display -u scratch-org --json | jq -r '.result.loginUrl')"
-          echo "Username: $(sfdx force:user:display -u scratch-org --json | jq -r '.result.username')"
-          echo "Password: $(sfdx force:user:password:generate -u scratch-org --json | jq -r '.result.password')"
+          echo "\u001b[34;1mURL:\u001b[0m       $(sfdx force:user:display -u scratch-org --json | jq -r '.result.loginUrl')"
+          echo "\u001b[34;1mUsername:\u001b[0m: \u001b[4m$(sfdx force:user:display -u scratch-org --json | jq -r '.result.username')\u001b[0m"
+          echo "\u001b[34;1mPassword:\u001b[0m: \u001b[4m$(sfdx force:user:password:generate -u scratch-org --json | jq -r '.result.password')\u001b[0m"
           echo ""
           echo ""
           echo ""
@@ -150,7 +151,7 @@ jobs:
 
   pull-metadata:
     name: Pull Metadata
-    needs: [create-scratch-org, branch]
+    needs: setup
     runs-on: ubuntu-latest
     steps:
 
@@ -160,7 +161,7 @@ jobs:
 
       # Create branch
       - name: Create branch
-        run: git checkout -B ${{ needs.branch.outputs.branch }}
+        run: git pull && git checkout -B ${{ needs.setup.outputs.branch }}
 
       # Install SFDX
       - name: Install SFDX
@@ -176,8 +177,8 @@ jobs:
       - name: Authenticate scratch org
         run: sfdx auth:sfdxurl:store -f ./SCRATCH_ORG_SFDX_AUTH_URL.txt -a scratch-org -s
       
-      # Identiy to Git
-      - name: Identiy to Git
+      # Identification for Git
+      - name: Identification for Git
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
