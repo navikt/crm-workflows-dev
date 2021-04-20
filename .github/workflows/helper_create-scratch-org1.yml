@@ -21,13 +21,13 @@ jobs:
           if [ ${{ github.event.inputs.branchName }} != "" ]; then
             echo "::set-output name=branch::$(echo ${{ github.event.inputs.branchName }})"
             echo "'${{ github.event.inputs.branchName }}' was set as branch"
-          elif [ ${GITHUB_REF/refs\/tags\//} == "master" ] || [ ${GITHUB_REF/refs\/tags\//} == "main" ]; then
+          elif [ ${GITHUB_REF/refs\/heads\//} == "master" ] || [ ${GITHUB_REF/refs\/heads\//} == "main" ]; then
             echo ""
             echo "You didn't type a branch name and left the default main/master branch in the dropdown menu. You cannot push changes directly to master, please use a separate branch."
             exit 125
           else
-            echo "::set-output name=branch::${GITHUB_REF/refs\/tags\//}"
-            echo "'${GITHUB_REF/refs\/tags\//}' was set as branch"
+            echo "::set-output name=branch::${GITHUB_REF/refs\/heads\//}"
+            echo "'${GITHUB_REF/refs\/heads\//}' was set as branch"
           fi
 
       # Checkout source code
