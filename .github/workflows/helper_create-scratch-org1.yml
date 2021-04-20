@@ -172,7 +172,6 @@ jobs:
               timeLeft=$(expr $end - $SECONDS)
               echo "::warning::$(expr $timeLeft / 60) minutes left until scratch org is deleted (the branch will remain)"
               echo ""
-              echo ""
 
               echo "Running 'sfdx force:source:pull -f'"
               pull=$(sfdx force:source:pull -f --json)
@@ -185,12 +184,13 @@ jobs:
                 echo $pull | jq -r '.result.pulledSource'
                 
                 echo ""
-                echo ""
-                echo "Pushing Metadata to branch ${{ needs.setup.outputs.branch }}"
+                echo "Pushing Metadata to branch '${{ needs.setup.outputs.branch }}'"
                 git add force-app &> /dev/null
                 git diff-index --quiet HEAD || git commit -m "Added files using 'Create Scratch Org' helper on GitHub Actions" --no-verify &> /dev/null
                 git push origin ${{ needs.setup.outputs.branch }} &> /dev/null
                 echo "Done."
+              else
+                echo "No new metadata found."
               fi
 
               echo "Sleeping for 30 seconds."
