@@ -87,7 +87,7 @@ jobs:
         run: sfdx force:source:push
   
   login:
-    name: Click here to login
+    name: Click Here to Login
     needs: setup
     runs-on: ubuntu-latest
     steps:
