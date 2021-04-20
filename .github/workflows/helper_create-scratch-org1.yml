@@ -150,27 +150,29 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v2
 
-      # Create/Set branch
-      - name: Create/Set branch
-        run: git pull && git checkout -B ${{ needs.setup.outputs.branch }}
-
-      # Install SFDX
-      - name: Install SFDX
-        uses: sfdx-actions/setup-sfdx@v1
-            
-      # Download SCRATCH_ORG_SFDX_AUTH_URL.txt
-      - name: Download SCRATCH_ORG_SFDX_AUTH_URL.txt
+      # Prepare to Authenticate
+      - name: Prepare to Authenticate
         uses: actions/download-artifact@v2
         with:
           name: sfdx-auth-url
-            
-      # Authentication
-      - name: Authentication
+      
+      # Authenticate
+      - name: Authenticate
         run: |
+          
+          git pull
+          git checkout -B ${{ needs.setup.outputs.branch }}
+          
+          wget https://developer.salesforce.com/media/salesforce-cli/sfdx-linux-amd64.tar.xz
+          mkdir sfdx-cli
+          tar xJf sfdx-linux-amd64.tar.xz -C sfdx-cli --strip-components 1
+          ./sfdx-cli/install
+          
+          echo ${{ secrets.PROD_SFDX_URL}} > ./PROD_SFDX_URL.txt
+          sfdx auth:sfdxurl:store -f ./PROD_SFDX_URL.txt -a devhub -d
+          rm -f ./PROD_SFDX_URL.txt
+
           sfdx auth:sfdxurl:store -f ./SCRATCH_ORG_SFDX_AUTH_URL.txt -a scratch-org -s
-          git config --global user.name "github-actions"
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          rm -f ./SCRATCH_ORG_SFDX_AUTH_URL.txt
 
       # Pull Metadata
       - name: Pull Metadata
@@ -183,14 +185,11 @@ jobs:
               echo "::warning::$(expr $timeLeft / 60) minutes left until scratch org is deleted (the branch will remain)"
               echo ""
 
-              echo "Running 'sfdx force:source:pull -f'"
+              echo "::debug::Running 'sfdx force:source:pull -f'"
               pull=$(sfdx force:source:pull -f --json)
               status=$(jq '.result.pulledSource' <<< $pull)
 
               if [ "$status" != "[]" ]; then
-                echo "Pulled Metadata"
-                echo "---------------------------"
-                echo ""
                 echo $pull | jq -r '.result.pulledSource'
                 
                 echo ""
@@ -198,7 +197,7 @@ jobs:
                 git add force-app &> /dev/null
                 git diff-index --quiet HEAD || git commit -m "Added files using 'Create Scratch Org' helper on GitHub Actions" --no-verify &> /dev/null
                 git push origin ${{ needs.setup.outputs.branch }} &> /dev/null
-                echo "Done. You can create a Pull Request here: https://github.com/navikt/crm-workflows-dev/compare/${{ needs.setup.outputs.branch }}?expand=1"
+                echo "::debug::Done. You can create a Pull Request here: https://github.com/navikt/crm-workflows-dev/compare/${{ needs.setup.outputs.branch }}?expand=1"
               else
                 echo "No new metadata found."
               fi
