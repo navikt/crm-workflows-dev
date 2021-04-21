@@ -104,7 +104,7 @@ jobs:
         run: |
           sleep 30
           for permset in $(jq -r '.permsets_to_assign | values | .[]' ./config/ssdx-config.json); do
-            sfdx force:user:permset:assign -n $permset -u scratch-org
+            sfdx force:user:permset:assign -n $permset -u scratch-org &> /dev/null
             echo "Assigned permission set '$permset'"
           done
   
@@ -192,8 +192,9 @@ jobs:
         run: |
             end=$((SECONDS+240))
             
-            echo ""
             while [ $SECONDS -lt $end ]; do
+              
+              echo ""
               timeLeft=$(expr $end - $SECONDS)
               if [ $timeLeft -ge 3600 ]; then
                 hours=$(bc <<< "scale=1; $timeLeft / 3600")
@@ -217,7 +218,7 @@ jobs:
                 git commit -m "Added files using 'Create Scratch Org' helper on GitHub Actions" --no-verify &> /dev/null
                 git push origin ${{ needs.setup.outputs.branch }} &> /dev/null
                 
-                echo "Done. You can create a Pull Request here: https://github.com/${{ env.GITHUB_REPOSITORY }}/compare/${{ needs.setup.outputs.branch }}?expand=1"
+                echo "Done. You can create a Pull Request here: https://github.com/${{ github.repository }}/compare/${{ needs.setup.outputs.branch }}?expand=1"
               else
                 echo "No new metadata found."
               fi
