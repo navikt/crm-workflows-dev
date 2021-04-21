@@ -6,7 +6,7 @@ cd -- "$(dirname "$BASH_SOURCE")"
 cd ../..
 tput reset
 
-declare -a folders=( "crm-arbeidsforhold" "crm-arbeidsgiver-base" "crm-arbeidsgiver-integration" "crm-arbeidsgiver-kurs" "crm-arbeidsgiver-template" "crm-arbeidsgiver-tiltaksarrangor" "crm-community-base" "crm-nks-base" "crm-platform-access-control" "crm-platform-admin" "crm-platform-base" "crm-platform-email-scheduling" "crm-platform-integration" "crm-platform-reporting" "crm-platform-user-access-management" "crm-shared" "crm-shared-activity-timeline" "crm-workflows-base" )
+declare -a folders=( "crm-arbeidsforhold" "crm-arbeidsgiver-base" "crm-arbeidsgiver-integration" "crm-arbeidsgiver-kurs" "crm-arbeidsgiver-template" "crm-arbeidsgiver-tiltaksarrangor" "crm-community-base" "crm-nks-base" "crm-platform-access-control" "crm-platform-admin" "crm-platform-base" "crm-platform-email-scheduling" "crm-platform-integration" "crm-platform-reporting" "crm-platform-user-access-management" "crm-shared" "crm-shared-activity-timeline" )
 branch="autoNpmUpdate"
 
 for folder in ${folders[@]}; do
