@@ -6,7 +6,7 @@ cd -- "$(dirname "$BASH_SOURCE")"
 cd ../..
 tput reset
 
-declare -a folders=( "crm-arbeidsgiver-base" "crm-arbeidsgiver-integration" "crm-arbeidsgiver-kurs" "crm-arbeidsgiver-template" "crm-arbeidsgiver-tiltaksarrangor" "crm-community-base" "crm-hot" "crm-nks-base" "crm-platform-access-control" "crm-platform-admin" "crm-platform-base" "crm-platform-email-scheduling" "crm-platform-integration" "crm-platform-reporting" "crm-platform-user-access-management" )
+declare -a folders=( "crm-arbeidsforhold" "crm-arbeidsgiver-base" "crm-arbeidsgiver-integration" "crm-arbeidsgiver-kurs" "crm-arbeidsgiver-template" "crm-arbeidsgiver-tiltaksarrangor" "crm-community-base" "crm-nks-base" "crm-platform-access-control" "crm-platform-admin" "crm-platform-base" "crm-platform-email-scheduling" "crm-platform-integration" "crm-platform-reporting" "crm-platform-unpackaged" "crm-platform-user-access-management" "crm-shared" "crm-shared-activity-timeline" "crm-workflows-base" )
 branch="autoNpmUpdate"
 
 for folder in ${folders[@]}; do
@@ -25,6 +25,7 @@ for folder in ${folders[@]}; do
 
 	cp ../crm-workflows-dev/{.eslintignore,.eslintrc.json,.prettierignore,.prettierrc,jest-sa11y-setup.js,jest.config.js,package.json,package-lock.json,ruleset.xml} . >/dev/null 2>&1
     npm install >/dev/null 2>&1
+    npm update --force >/dev/null 2>&1
 
 	git add . >/dev/null 2>&1
 	git commit -m "[AUTO] Updated NPM" >/dev/null 2>&1
