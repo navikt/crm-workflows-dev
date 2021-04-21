@@ -131,7 +131,7 @@ jobs:
           sfdx auth:sfdxurl:store -f ./SCRATCH_ORG_SFDX_AUTH_URL.txt -a scratch-org -s
 
       # Click here to login
-      - name: Click here to login
+      - name: Click Here to Login
         run: |
           echo ""
           echo "Instant Login URL: $(sfdx force:org:open -u scratch-org -r --json | jq -r '.result.url')"
@@ -186,9 +186,9 @@ jobs:
             
             while [ $SECONDS -lt $end ]; do
 
-              timeLeft=$(expr $end - $SECONDS)
-              echo "::warning::$(expr $timeLeft / 60) minutes left until scratch org is deleted (the branch will remain)"
               echo ""
+              echo "Sleeping for 30 seconds."
+              sleep 30 # TODO edit to 1 minute
 
               echo "Running 'sfdx force:source:pull -f'"
               pull=$(sfdx force:source:pull -f --json)
@@ -199,16 +199,17 @@ jobs:
                 
                 echo ""
                 echo "Pushing Metadata to branch '${{ needs.setup.outputs.branch }}'"
-                add=$(git add force-app)
-                commit=$(git commit -m "Added files using 'Create Scratch Org' helper on GitHub Actions" --no-verify)
-                push=$(git push origin ${{ needs.setup.outputs.branch }})
+                git add force-app | tee output &> /dev/null
+                git commit -m "Added files using 'Create Scratch Org' helper on GitHub Actions" --no-verify | tee output &> /dev/null
+                git push origin ${{ needs.setup.outputs.branch }} | tee output &> /dev/null
                 echo "Done. You can create a Pull Request here: https://github.com/navikt/crm-workflows-dev/compare/${{ needs.setup.outputs.branch }}?expand=1"
               else
                 echo "No new metadata found."
               fi
 
-              echo "Sleeping for 30 seconds."
-              sleep 30 # TODO edit to 1 minute
+              echo ""
+              timeLeft=$(expr $end - $SECONDS)
+              echo "::warning::$(expr $timeLeft / 60) minutes left until scratch org is deleted (the branch will remain)"
            
             done
 
