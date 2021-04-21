@@ -99,6 +99,14 @@ jobs:
       # Deploy source to scratch org
       - name: Push source to scratch org
         run: sfdx force:source:push
+
+      - name: Assign Permission Sets
+        run: |
+          sleep 30
+          for permset in $(jq -r '.permsets_to_assign | values | .[]' ./config/ssdx-config.json); do
+            sfdx force:user:permset:assign -n $permset -u scratch-org
+            echo "Assigned permission set '$permset'"
+          done
   
   login:
     name: Click Here to Login

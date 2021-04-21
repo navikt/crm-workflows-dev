@@ -1,11 +1,11 @@
 {
-  "locations": {
-    "dummy-data": "",
-    "users": "",
-    "manifest": "",
-    "unpackagable": "",
-    "package-key": ""
-  },
-  "permsets_to_assign": [],
-  "managed_packages": []
+    "locations": {
+        "dummy-data": "",
+        "users": "",
+        "manifest": "",
+        "unpackagable": "",
+        "package-key": ""
+    },
+    "permsets_to_assign": ["TemperatureConverterAccess"],
+    "managed_packages": []
 }
