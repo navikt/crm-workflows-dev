@@ -185,32 +185,34 @@ jobs:
             end=$((SECONDS+240))
             
             while [ $SECONDS -lt $end ]; do
+              timeLeft=$(expr $end - $SECONDS)
+              if [ $timeLeft -ge 3600 ]; then
+                hours=$(bc <<< "scale=1; $timeLeft / 3600")
+                echo "::warning::$hours hour(s) left until scratch org is deleted (the branch will remain)."
+              elif [ $timeLeft -ge 60 ]; then
+                echo "::warning::$("scale=2 ; $timeLeft / 60" | bc) minute(s) left until scratch org is deleted (the branch will remain). HURRY UP!"
+              elif [ $timeLeft -gt 0 ]; then
+                echo "::warning::$timeLeft second(s) left until scratch org is deleted (the branch will remain). YOU REALLY NEED TO HURRY UP!"
+              fi
 
-              echo ""
-              echo "Sleeping for 30 seconds."
-              sleep 30 # TODO edit to 1 minute
-
-              echo "Running 'sfdx force:source:pull -f'"
               pull=$(sfdx force:source:pull -f --json)
               status=$(jq '.result.pulledSource' <<< $pull)
 
               if [ "$status" != "[]" ]; then
                 echo $pull | jq -r '.result.pulledSource'
-                
                 echo ""
-                echo "Pushing Metadata to branch '${{ needs.setup.outputs.branch }}'"
+
+                echo "Pushing Metadata to branch '${{ needs.setup.outputs.branch }}' ..."
                 git add force-app | tee output &> /dev/null
                 git commit -m "Added files using 'Create Scratch Org' helper on GitHub Actions" --no-verify | tee output &> /dev/null
                 git push origin ${{ needs.setup.outputs.branch }} | tee output &> /dev/null
-                echo "Done. You can create a Pull Request here: https://github.com/navikt/crm-workflows-dev/compare/${{ needs.setup.outputs.branch }}?expand=1"
+                
+                echo "Done. You can create a Pull Request here: https://github.com/${{ GITHUB_REPOSITORY }}/compare/${{ needs.setup.outputs.branch }}?expand=1"
               else
                 echo "No new metadata found."
               fi
-
-              echo ""
-              timeLeft=$(expr $end - $SECONDS)
-              echo "::warning::$(expr $timeLeft / 60) minutes left until scratch org is deleted (the branch will remain)"
-           
+              
+              sleep 60
             done
 
   delete-scratch-org:
