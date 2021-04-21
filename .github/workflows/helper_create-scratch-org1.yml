@@ -134,7 +134,7 @@ jobs:
       - name: Click here to login
         run: |
           echo ""
-          echo "::debug::Instant Login URL: $(sfdx force:org:open -u scratch-org -r --json | jq -r '.result.url')"
+          echo "Instant Login URL: $(sfdx force:org:open -u scratch-org -r --json | jq -r '.result.url')"
           echo ""
           echo "URL:       $(sfdx force:user:display -u scratch-org --json | jq -r '.result.loginUrl')"
           echo "Username:  $(sfdx force:user:display -u scratch-org --json | jq -r '.result.username')"
@@ -190,7 +190,7 @@ jobs:
               echo "::warning::$(expr $timeLeft / 60) minutes left until scratch org is deleted (the branch will remain)"
               echo ""
 
-              echo "::debug::Running 'sfdx force:source:pull -f'"
+              echo "Running 'sfdx force:source:pull -f'"
               pull=$(sfdx force:source:pull -f --json)
               status=$(jq '.result.pulledSource' <<< $pull)
 
@@ -202,7 +202,7 @@ jobs:
                 add=$(git add force-app)
                 commit=$(git commit -m "Added files using 'Create Scratch Org' helper on GitHub Actions" --no-verify)
                 push=$(git push origin ${{ needs.setup.outputs.branch }})
-                echo "::debug::Done. You can create a Pull Request here: https://github.com/navikt/crm-workflows-dev/compare/${{ needs.setup.outputs.branch }}?expand=1"
+                echo "Done. You can create a Pull Request here: https://github.com/navikt/crm-workflows-dev/compare/${{ needs.setup.outputs.branch }}?expand=1"
               else
                 echo "No new metadata found."
               fi
