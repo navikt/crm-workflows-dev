@@ -190,7 +190,8 @@ jobs:
                 hours=$(bc <<< "scale=1; $timeLeft / 3600")
                 echo "::warning::$hours hour(s) left until scratch org is deleted (the branch will remain)."
               elif [ $timeLeft -ge 60 ]; then
-                echo "::warning::$("scale=2 ; $timeLeft / 60" | bc) minute(s) left until scratch org is deleted (the branch will remain). HURRY UP!"
+                minutes=$(bc <<< "scale=0; $timeLeft / 60")
+                echo "::warning::$minutes minute(s) left until scratch org is deleted (the branch will remain). HURRY UP!"
               elif [ $timeLeft -gt 0 ]; then
                 echo "::warning::$timeLeft second(s) left until scratch org is deleted (the branch will remain). YOU REALLY NEED TO HURRY UP!"
               fi
