@@ -187,10 +187,10 @@ jobs:
           rm -f ./SCRATCH_ORG_SFDX_AUTH_URL.txt
 
 
-      # Pull Metadata
-      - name: Pull Metadata
+      # Pull Metadata (Every Minute)
+      - name: Pull Metadata (Every Minute)
         run: |
-            end=$((SECONDS+240))
+            end=$((SECONDS+20000)) # pull for 5.5 hours
             
             while [ $SECONDS -lt $end ]; do
               
@@ -218,9 +218,9 @@ jobs:
                 git commit -m "Added files using 'Create Scratch Org' helper on GitHub Actions" --no-verify &> /dev/null
                 git push origin ${{ needs.setup.outputs.branch }} &> /dev/null
                 
-                echo "Done. You can create a Pull Request here: https://github.com/${{ github.repository }}/compare/${{ needs.setup.outputs.branch }}?expand=1"
+                echo "Done. Create a Pull Request here: https://github.com/${{ github.repository }}/compare/${{ needs.setup.outputs.branch }}?expand=1"
               else
-                echo "No new metadata found."
+                echo "No new metadata found. Create a Pull Request for previous changes here: https://github.com/${{ github.repository }}/compare/${{ needs.setup.outputs.branch }}?expand=1"
               fi
               
               sleep 60
