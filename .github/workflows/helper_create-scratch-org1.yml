@@ -225,7 +225,7 @@ jobs:
 
                 echo "Pushing Metadata to branch '${{ needs.setup.outputs.branch }}' ..."
                 git add force-app &> /dev/null
-                git commit -m "Added files using 'Create Scratch Org' helper on GitHub Actions" --no-verify &> /dev/null
+                git commit -m "Added files using 'Create Scratch Org' helper on GitHub Actions" &> /dev/null
                 git push origin ${{ needs.setup.outputs.branch }} &> /dev/null
                 
                 echo "Done. Create a Pull Request here: https://github.com/${{ github.repository }}/compare/${{ needs.setup.outputs.branch }}?expand=1"
