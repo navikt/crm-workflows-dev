@@ -227,7 +227,7 @@ jobs:
                 echo ""
 
                 echo "Pushing Metadata to branch '${{ needs.setup.outputs.branch }}' ..."
-                npx prettier --write force-app
+                npx prettier --write force-app &> /dev/null
                 git add force-app &> /dev/null
                 git commit -o force-app -m "Added files using 'Create Scratch Org' helper on GitHub Actions" --no-verify | tee output &> /dev/null
                 git push origin ${{ needs.setup.outputs.branch }} &> /dev/null
