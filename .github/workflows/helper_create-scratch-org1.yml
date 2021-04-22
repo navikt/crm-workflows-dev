@@ -185,6 +185,9 @@ jobs:
           mkdir sfdx-cli
           tar xJf sfdx-linux-amd64.tar.xz -C sfdx-cli --strip-components 1
           ./sfdx-cli/install
+
+          rm -rf sfdx-linux-amd64.tar.xz
+          rm -rf ./sfdx-cli/install
           
           echo ${{ secrets.PROD_SFDX_URL}} > ./PROD_SFDX_URL.txt
           sfdx auth:sfdxurl:store -f ./PROD_SFDX_URL.txt -a devhub -d
@@ -226,7 +229,7 @@ jobs:
                 echo "Pushing Metadata to branch '${{ needs.setup.outputs.branch }}' ..."
                 npx prettier --write force-app
                 git add force-app
-                git commit -m "Added files using 'Create Scratch Org' helper on GitHub Actions" --no-verify
+                git commit -o force-app -m "Added files using 'Create Scratch Org' helper on GitHub Actions" --no-verify
                 git push origin ${{ needs.setup.outputs.branch }}
                 
                 echo "Done. Create a Pull Request here: https://github.com/${{ github.repository }}/compare/${{ needs.setup.outputs.branch }}?expand=1"
