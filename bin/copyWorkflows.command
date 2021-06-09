@@ -25,7 +25,7 @@ for folder in ${folders[@]}; do
 	git stash >/dev/null 2>&1
 	git pull >/dev/null 2>&1
 
-	cp ../crm-workflows-dev/.github/workflows/* .github/workflows/
+	cp -r ../crm-workflows-dev/.github/workflows/* .github/workflows/
 
 	git add .github/workflows/* >/dev/null 2>&1
 	git commit -m "[AUTO] Updated Workflows" >/dev/null 2>&1
@@ -53,7 +53,7 @@ git push origin --delete $branch >/dev/null 2>&1
 git branch -D $branch >/dev/null 2>&1
 git checkout -b $branch >/dev/null 2>&1
 
-cp ../crm-workflows-dev/.github/workflows/* .github/workflows/
+cp -r ../crm-workflows-dev/.github/workflows/* .github/workflows/
 git add .github/workflows/* >/dev/null 2>&1
 git commit -m "[AUTO] Updated Workflows" >/dev/null 2>&1
 git push origin $branch
