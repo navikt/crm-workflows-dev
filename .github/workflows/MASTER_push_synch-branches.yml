@@ -32,7 +32,7 @@ jobs:
             git merge origin/DEV
           } ||
           {
-            git switch -c DEV
+            git checkout -b DEV
           }
           git merge origin/master
           git push origin DEV
