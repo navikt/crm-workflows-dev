@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - new-workflows
+      - mastertest
 jobs:
   # ################################################################# #
   # ######################## SYNCH BRANCHES ######################### #
@@ -20,7 +20,7 @@ jobs:
       - name: Init git
         run: |
           git fetch origin
-          git checkout master
+          git checkout mastertest
           git config --local user.email "branchsyncher@github.com"
           git config --local user.name "BRANCH SYNCHER"
 
@@ -35,7 +35,7 @@ jobs:
           {
             git checkout -b DEV
           }
-          git merge master
+          git merge mastertest
           git push origin DEV
           
           
@@ -49,7 +49,7 @@ jobs:
             git merge origin/UAT
           } ||
           {
-            git switch -c UAT
+            git checkout -b UAT
           }
-          git merge origin/master
+          git merge mastertest
           git push origin UAT
