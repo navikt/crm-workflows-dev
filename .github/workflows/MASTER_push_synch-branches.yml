@@ -20,6 +20,7 @@ jobs:
       - name: Init git
         run: |
           git fetch origin
+          git checkout master
           git config --local user.email "branchsyncher@github.com"
           git config --local user.name "BRANCH SYNCHER"
 
