@@ -34,7 +34,7 @@ jobs:
           {
             git checkout -b DEV
           }
-          git merge origin/master
+          git merge master
           git push origin DEV
           
           
