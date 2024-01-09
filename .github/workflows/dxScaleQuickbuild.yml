@@ -7,6 +7,6 @@ jobs:
         name: Quick build
         uses: navikt/crm-workflows-base/.github/workflows/ciPipeline.yml@dxAtScale
         permissions:
-            contents: read
+            contents: write
             packages: write
         secrets: inherit
