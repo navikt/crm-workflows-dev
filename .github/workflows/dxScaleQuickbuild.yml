@@ -1,9 +1,7 @@
-name: "Create artifact"
-
+name: "[PUSH] Create artifact"
 on:
     push:
     workflow_dispatch:
-
 jobs:
     quickbuild:
         name: Quick build
