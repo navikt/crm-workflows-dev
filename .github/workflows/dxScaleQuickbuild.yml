@@ -1,0 +1,13 @@
+name: "Create artifact"
+
+on:
+    workflow_dispatch:
+
+jobs:
+    quickbuild:
+        name: Quick build
+        uses: navikt/crm-workflows-base/.github/workflows/ciPipeline.yml@dxAtScale
+        permissions:
+            contents: read
+            packages: write
+        secrets: inherit

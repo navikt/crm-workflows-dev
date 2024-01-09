@@ -1,16 +1,19 @@
 {
+    "namespace": "",
+    "sfdcLoginUrl": "https://login.salesforce.com",
+    "sourceApiVersion": "59.0",
     "packageDirectories": [
         {
             "path": "force-app",
             "default": true,
             "package": "crm-workflows-dev",
-            "versionName": "ver 0.1",
-            "versionNumber": "0.17.0.NEXT"
+            "versionNumber": "0.17.0.NEXT",
+            "definitionFile": "config/project-scratch-def.json",
+            "unpackagedMetadata": {
+                "path": "unpackaged"
+            }
         }
     ],
-    "namespace": "",
-    "sfdcLoginUrl": "https://login.salesforce.com",
-    "sourceApiVersion": "59.0",
     "packageAliases": {
         "crm-workflows-dev": "0Ho2o000000Kym5CAC"
     }
