@@ -20,6 +20,6 @@ private class TemperatureConverterTest {
     @isTest
     static void testNegativeTemp() {
         Decimal celsius = TemperatureConverter.FahrenheitToCelsius(-10);
-        System.assertEquals(-23.33, celsius);
+        Assert.areEqual(-23.33, celsius,'Negative temp test failed');
     }
 }
