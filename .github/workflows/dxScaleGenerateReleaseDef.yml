@@ -19,7 +19,7 @@ on:
 jobs:
     generateReleaseDef:
         name: Generate Release Definition
-        uses: navikt/crm-workflows-base/.github/workflows/cdGenerateReleaseDefinition.yml@dxAtScale
+        uses: navikt/crm-workflows-base/.github/workflows/cdGenerateReleaseDefinition.yml
         permissions:
             contents: write
         secrets: inherit
