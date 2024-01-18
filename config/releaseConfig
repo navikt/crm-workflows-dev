@@ -1,0 +1,3 @@
+releasedefinitionProperties:
+    skipIfAlreadyInstalled: true
+    
