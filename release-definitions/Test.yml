@@ -1,0 +1,5 @@
+release: Test
+skipIfAlreadyInstalled: true
+skipArtifactUpdate: false
+artifacts:
+  crm-workflows-dev: 0.17.0-29
