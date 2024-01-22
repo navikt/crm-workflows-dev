@@ -17,6 +17,7 @@ jobs:
         uses: navikt/crm-workflows-base/.github/workflows/cdReleaseToOrg.yml@dxAtScale
         permissions:
             contents: write
+            packages: read
         secrets: inherit
         with:
             pathToReleaseDef: ${{ inputs.pathToReleaseDef }}
