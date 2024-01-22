@@ -6,6 +6,7 @@ on:
                 description: "Path to release definition file"
                 required: true
                 type: string
+                default: "./release-definitions"
             org:
                 description: "Org (prod, preprod, dev, uat, sit)"
                 required: true
@@ -18,5 +19,5 @@ jobs:
             contents: write
         secrets: inherit
         with:
-            pathToReleaseDef: ${{ github.pathToReleaseDef }}
+            pathToReleaseDef: ${{ inputs.pathToReleaseDef }}
             org: ${{ inputs.org }}
