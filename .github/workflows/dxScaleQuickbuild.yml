@@ -1,6 +1,9 @@
 name: "[PUSH] Create artifact"
 on:
     push:
+        paths:
+            - 'force-app/**'
+            - 'unpackaged/**'
     workflow_dispatch:
 jobs:
     quickbuild:
