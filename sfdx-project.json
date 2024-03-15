@@ -1,20 +1,54 @@
 {
     "namespace": "",
     "sfdcLoginUrl": "https://login.salesforce.com",
-    "sourceApiVersion": "59.0",
+    "sourceApiVersion": "60.0",
     "packageDirectories": [
         {
+            "path": "temp",
+            "default": true
+        },
+        {
             "path": "force-app",
-            "default": true,
             "package": "crm-workflows-dev",
             "versionNumber": "0.17.0.NEXT",
             "definitionFile": "config/project-scratch-def.json",
             "unpackagedMetadata": {
                 "path": "unpackaged"
-            }
+            },
+            "dependencies": [
+            {
+                "package": "crm-platform-base",
+                "versionNumber": "0.174.0.LATEST"
+            }]
+        },
+        {
+            "path": "data-package",
+            "package": "crm-workflows-dev-data",
+            "versionNumber": "0.0.0.0",
+            "definitionFile": "config/project-scratch-def.json",
+            "type": "data"
         }
     ],
     "packageAliases": {
-        "crm-workflows-dev": "0Ho2o000000Kym5CAC"
+        "crm-workflows-dev": "0Ho2o000000Kym5CAC",
+        "crm-nks-base": "0Ho2o000000fxWmCAI",
+        "crm-platform-base": "0Ho2o0000008ORmCAM",
+        "crm-platform-access-control": "0Ho2o0000008OR3CAM",
+        "crm-nks-base-components": "0Ho7U000000000LSAQ",
+        "crm-thread-view": "0Ho7U000000000zSAA",
+        "crm-shared-timeline": "0Ho2o000000fxXBCAY",
+        "crm-shared-base": "0Ho2o000000fxXLCAY",
+        "crm-arbeidsgiver-base": "0Ho2o0000008OQtCAM",
+        "crm-platform-integration": "0Ho2o0000008ORrCAM",
+        "crm-nks-integration": "0Ho2o000000fxX6CAI",
+        "crm-journal-utilities": "0Ho2o000000fxXkCAI",
+        "crm-shared-user-notification": "0Ho2o000000fxY4CAI",
+        "crm-shared-flowComponents": "0Ho2o000000fxYJCAY",
+        "crm-henvendelse-base": "0Ho7U000000000kSAA",
+        "crm-henvendelse": "0Ho2o000000fxXfCAI",
+        "crm-platform-oppgave": "0Ho2o000000fxXzCAI",
+        "crm-community-base": "0Ho2o0000008OSzCAM",
+        "crm-sf-saf": "0Ho7U0000000001SAA",
+        "crm-platform-reporting": "0Ho2o0000008OSfCAM"
     }
 }
