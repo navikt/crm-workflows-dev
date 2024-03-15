@@ -24,7 +24,7 @@
         {
             "path": "data-package",
             "package": "crm-workflows-dev-data",
-            "versionNumber": "0.0.0.0",
+            "versionNumber": "0.0.0.1",
             "definitionFile": "config/project-scratch-def.json",
             "type": "data",
             "dependencies": [
