@@ -4,6 +4,8 @@ on:
         paths:
             - 'force-app/**'
             - 'unpackaged/**'
+            - 'data-package/**'
+            - 'sfdx-project.json'
     workflow_dispatch:
 jobs:
     quickbuild:
