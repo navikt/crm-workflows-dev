@@ -1,3 +1,6 @@
 force-app/main/default/permissionsets/*
 force-app/main/default/profiles/*
 !force-app/main/default/permissionsets/TemperatureConverterAccess.permissionset-meta.xml
+**/jsconfig.json
+
+**/.eslintrc.json
