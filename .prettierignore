@@ -9,6 +9,11 @@ coverage/
 .vscode
 .github
 jsconfig.json
+.eslintignore
+.eslintrc.json
+
+package-lock.json
+package.json
 
 **/*.apex
 **/staticresources/*
