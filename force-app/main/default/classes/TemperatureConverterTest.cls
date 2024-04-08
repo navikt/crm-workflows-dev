@@ -14,12 +14,16 @@ private class TemperatureConverterTest {
     @isTest
     static void testBoilingPoint() {
         Decimal celsius = TemperatureConverter.FahrenheitToCelsius(212);
-        Assert.areEqual(100, celsius, 'Boiling point temperature is not expected.');
+        Assert.areEqual(
+            100,
+            celsius,
+            'Boiling point temperature is not expected.'
+        );
     }
 
     @isTest
     static void testNegativeTemp() {
         Decimal celsius = TemperatureConverter.FahrenheitToCelsius(-10);
-        Assert.areEqual(-23.33, celsius,'Negative temp test failed');
+        Assert.areEqual(-23.33, celsius, 'Negative temp test failed aaa');
     }
 }
