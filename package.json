@@ -3,22 +3,21 @@
   "private": true,
   "version": "1.0.0",
   "scripts": {
-    "lint": "eslint **/{aura,lwc}/**/*.js",
+    "lint": "eslint --no-error-on-unmatched-pattern **/{aura,lwc}/**/*.js",
     "lint:fix": "npm run lint -- --fix",
     "test": "npm run test:unit",
     "test:unit": "sfdx-lwc-jest",
     "test:unit:watch": "sfdx-lwc-jest --watch",
     "test:unit:debug": "sfdx-lwc-jest --debug",
     "test:unit:coverage": "sfdx-lwc-jest --coverage",
-    "prettier": "prettier --write \"**/*.{cls,cmp,component,css,html,js,json,md,page,trigger,xml,yaml,yml}\"",
-    "prettier:verify": "prettier --check \"**/*.{cls,cmp,component,css,html,js,json,md,page,trigger,xml,yaml,yml}\"",
+    "prettier:write": "prettier --write \"**/*.{cls,cmp,component,css,html,js,json,md,page,trigger,xml,yaml,yml}\"",
+    "prettier:check": "prettier --check \"**/*.{cls,cmp,component,css,html,js,json,md,page,trigger,xml,yaml,yml}\"",
     "prepare": "husky",
     "precommit": "lint-staged",
     "lint-staged": "lint-staged"
   },
   "devDependencies": {
     "@locker/eslint-config-locker": "^0.21.4",
-    "@locker/eslint-plugin-locker": "^0.21.4",
     "@lwc/eslint-plugin-lwc": "^1.1.2",
     "@prettier/plugin-xml": "^3.2.2",
     "@salesforce/eslint-config-lwc": "^3.2.3",
@@ -36,10 +35,13 @@
   },
   "lint-staged": {
     "**/{aura,lwc}/**/*.js": [
-      "eslint --fix"
+      "eslint --no-error-on-unmatched-pattern --fix"
     ],
     "**/*.{cls,cmp,component,css,html,js,json,md,page,trigger,xml,yaml,yml}": [
       "prettier --write"
+    ],
+    "**/*.{cls,cmp,component,css,html,js,page,trigger,xml}": [
+      "sf scanner run --target"
     ]
   }
 }
