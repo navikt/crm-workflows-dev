@@ -13,7 +13,7 @@ private class TemperatureConverterTest {
     }
 
     @isTest
-    static void fahrenheitToBoilingPoint() {
+    static void FahrenheitToBoilingPoint() {
         Decimal celsius = TemperatureConverter.FahrenheitToCelsius(212);
         Assert.areEqual(
             100,
