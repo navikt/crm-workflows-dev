@@ -1,5 +1,6 @@
 force-app/main/default/permissionsets/*
 force-app/main/default/profiles/*
+temp/README.md
 !force-app/main/default/permissionsets/TemperatureConverterAccess.permissionset-meta.xml
 **/jsconfig.json
 
