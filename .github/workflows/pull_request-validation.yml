@@ -1,5 +1,6 @@
 name: "[PR] Validate"
 on:
+  workflow_dispatch:
   pull_request:
     branches:
       - "*"
