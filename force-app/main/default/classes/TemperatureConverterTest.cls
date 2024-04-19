@@ -7,7 +7,7 @@ private class TemperatureConverterTest {
     }
 
     @isTest
-    static void fahrenheitToFreezingPoint() {
+    static void FahrenheitToFreezingPoint() {
         Decimal celsius = TemperatureConverter.FahrenheitToCelsius(32);
         Assert.areEqual(0, celsius, 'Freezing point test failed');
     }
@@ -23,7 +23,7 @@ private class TemperatureConverterTest {
     }
 
     @isTest
-    static void FahrenheitToNegativeTemp() {
+    static void fahrenheitToNegativeTemp() {
         Decimal celsius = TemperatureConverter.FahrenheitToCelsius(-10);
         Assert.areEqual(-23.33, celsius, 'Negative temp test failed aaa');
     }
