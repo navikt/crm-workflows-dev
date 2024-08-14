@@ -37,3 +37,9 @@ ehthumbs.db
 $RECYCLE.BIN/
 
 .localdevserver
+
+# misc
+.*.sw?
+*.vim
+TAGS
+tags
