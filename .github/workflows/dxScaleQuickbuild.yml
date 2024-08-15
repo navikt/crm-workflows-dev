@@ -1,11 +1,6 @@
-name: "[PUSH] Create artifact"
+name: "[PUSH] Create artifact (dxScaleQuickBuild)"
 on:
     push:
-        paths:
-            - 'force-app/**'
-            - 'unpackaged/**'
-            - 'data-package/**'
-            - 'sfdx-project.json'
     workflow_dispatch:
 jobs:
     quickbuild:
