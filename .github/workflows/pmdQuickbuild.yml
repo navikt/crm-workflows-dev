@@ -1,0 +1,12 @@
+name: "[PUSH] Create artifact (dxScaleQuickBuild)"
+on:
+    push:
+    workflow_dispatch:
+jobs:
+    quickbuild:
+        name: Create artifact
+        uses: navikt/crm-workflows-base/.github/workflows/ciPipeline.yml@no-modifyall
+        permissions:
+            contents: write
+            packages: write
+        secrets: inherit
