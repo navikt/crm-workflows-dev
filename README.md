@@ -17,4 +17,4 @@ Spørsmål knyttet til koden eller prosjektet kan stilles til teamalias@nav.no
 
 ## For NAV-ansatte
 
-Interne henvendelser kan sendes via Slack i kanalen `#crm-plattform-team`.
+Interne henvendelser kan sendes via Slack i kanalen `#platforce`.
