@@ -39,9 +39,6 @@
     ],
     "**/*.{cls,cmp,component,css,html,js,json,md,page,trigger,xml,yaml,yml}": [
       "prettier --write"
-    ],
-    "**/*.{cls,cmp,component,css,html,js,page,trigger,xml}": [
-      "sf scanner run --target"
     ]
   }
 }
