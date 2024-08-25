@@ -10,3 +10,10 @@ jobs:
             contents: write
             packages: write
         secrets: inherit
+    dummy:
+        name: Do nothing
+        runs-on: ubuntu-latest
+        needs: quickbuild
+        steps:
+            - name: Dummier
+              run: echo Dummy run successfully.
