@@ -1,6 +1,5 @@
 name: "[PUSH] Create artifact (dxScaleQuickBuild)"
 on:
-    push:
     workflow_dispatch:
 jobs:
     quickbuild:
