@@ -5,7 +5,7 @@ on:
 jobs:
     quickbuild:
         name: Create artifact
-        uses: navikt/crm-workflows-base/.github/workflows/ciPipeline.yml@no-modifyall
+        uses: navikt/crm-workflows-base/.github/workflows/ciValidate.yml@pmd-annotation
         permissions:
             contents: write
             packages: write
