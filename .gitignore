@@ -43,4 +43,6 @@ $RECYCLE.BIN/
 *.vim
 TAGS
 tags
-pmd-rules.jar
+
+# PMD
+pmd-rules-*.jar
