@@ -3,45 +3,27 @@
   "private": true,
   "version": "1.0.0",
   "scripts": {
-    "lint": "eslint --no-error-on-unmatched-pattern **/{aura,lwc}/**/*.js",
-    "lint:fix": "npm run lint -- --fix",
     "test": "npm run test:unit",
     "test:unit": "sfdx-lwc-jest",
     "test:unit:watch": "sfdx-lwc-jest --watch",
     "test:unit:debug": "sfdx-lwc-jest --debug",
     "test:unit:coverage": "sfdx-lwc-jest --coverage",
     "prettier:write": "prettier --write \"**/*.{cls,cmp,component,css,html,js,json,md,page,trigger,xml,yaml,yml}\"",
-    "prettier:check": "prettier --check \"**/*.{cls,cmp,component,css,html,js,json,md,page,trigger,xml,yaml,yml}\"",
+    "prettier:check": "prettier --check --no-error-on-unmatched-pattern \"**/*.{cls,cmp,component,css,html,js,json,md,page,trigger,xml,yaml,yml}\"",
     "prepare": "husky",
     "precommit": "lint-staged",
     "lint-staged": "lint-staged"
   },
   "devDependencies": {
-    "@locker/eslint-config-locker": "^0.21.4",
-    "@lwc/eslint-plugin-lwc": "^1.1.2",
-    "@prettier/plugin-xml": "^3.2.2",
-    "@salesforce/eslint-config-lwc": "^3.2.3",
-    "@salesforce/eslint-plugin-aura": "^2.0.0",
-    "@salesforce/eslint-plugin-lightning": "^1.0.0",
-    "@salesforce/sfdx-lwc-jest": "^4.0.1",
-    "eslint": "^8.57.0",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-import": "^2.25.4",
-    "eslint-plugin-jest": "^27.6.0",
-    "husky": "^9.0.11",
-    "lint-staged": "^15.1.0",
-    "prettier": "^3.1.0",
-    "prettier-plugin-apex": "^2.0.1"
+    "@prettier/plugin-xml": "3.4.2",
+    "husky": "9.1.7",
+    "lint-staged": "16.2.7",
+    "prettier": "3.7.4",
+    "prettier-plugin-apex": "2.2.6"
   },
   "lint-staged": {
-    "**/{aura,lwc}/**/*.js": [
-      "eslint --no-error-on-unmatched-pattern --fix"
-    ],
     "**/*.{cls,cmp,component,css,html,js,json,md,page,trigger,xml,yaml,yml}": [
-      "prettier --write"
-    ],
-    "**/*.{cls,cmp,component,css,html,js,page,trigger,xml}": [
-      "sf scanner run --target"
+      "prettier --write --ignore-path .gitignore --ignore-path .prettierignore"
     ]
   }
 }

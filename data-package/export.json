@@ -1,9 +1,0 @@
-{
-    "objects": [
-        {
-            "query": "SELECT Id, Subject, Status, Origin FROM Case",
-            "operation": "Upsert",
-            "externalId": "Name"
-        }
-    ]
-}
