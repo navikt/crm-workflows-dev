@@ -11,25 +11,14 @@ concurrency:
 
 permissions: {}
 
-jobs:
-  get-token:
-    name: Get GitHub App Token
-    runs-on: ubuntu-latest
-    outputs:
-      token: ${{ steps.app-token.outputs.token }}
-    steps:
-      - uses: actions/create-github-app-token@f8d387b68d61c58ab83c6c016672934102569859 # v3
-        id: app-token
-        with:
-          app-id: ${{ vars.PLATFORM_TOKEN_APP_ID }}
-          private-key: ${{ secrets.PLATFORM_TOKEN_APP_PRIVATE_KEY }}
+jobs:  
 
   sync-workflows:
     name: Sync Workflow Files
-    needs: get-token
-    uses: navikt/crm-workflows-base/.github/workflows/workflow-sync.yml@388c7d44b1bf459495cd4328c8c434ae81d22e6f
+    uses: navikt/crm-workflows-base/.github/workflows/workflow-sync.yml@ee050c32ac2e5a6e1cdae81bbd44efa39122457c
     permissions:
       contents: write # Required for creating and pushing commits in the reusable workflow
       pull-requests: write # Required for creating pull requests in the reusable workflow
     secrets:
-      TOKEN: ${{ needs.get-token.outputs.token }}
+      PLATFORM_TOKEN_APP_ID: ${{ vars.PLATFORM_TOKEN_APP_ID }}
+      PLATFORM_TOKEN_APP_PRIVATE_KEY: ${{ secrets.PLATFORM_TOKEN_APP_PRIVATE_KEY }}
