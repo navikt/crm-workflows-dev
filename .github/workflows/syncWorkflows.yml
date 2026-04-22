@@ -15,7 +15,7 @@ jobs:
 
   sync-workflows:
     name: Sync Workflow Files
-    uses: navikt/crm-workflows-base/.github/workflows/workflow-sync.yml@ee050c32ac2e5a6e1cdae81bbd44efa39122457c
+    uses: navikt/crm-workflows-base/.github/workflows/workflow-sync.yml@0246e8f24dacf767873fd6fd857f81e65e382a84
     permissions:
       contents: write # Required for creating and pushing commits in the reusable workflow
       pull-requests: write # Required for creating pull requests in the reusable workflow
