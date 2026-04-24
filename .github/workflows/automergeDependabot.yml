@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 permissions: {}
 concurrency:
-  group: automerge-dependabot-${{ github.ref_name }}
+  group: automerge-${{ github.ref_name }}
   cancel-in-progress: false
 
 jobs:
