@@ -2,6 +2,8 @@
   "name": "crm-workflows-dev",
   "private": true,
   "version": "1.0.0",
+  "description": "Test repo for Salesforce workflows",
+  "packageManager": "pnpm@12.14.0",
   "scripts": {
     "test": "npm run test:unit",
     "test:unit": "sfdx-lwc-jest",
