@@ -2,6 +2,11 @@ name: Validate Workflow
 
 on:
   workflow_dispatch:
+    inputs:
+      pool-tag:
+        description: 'The pool tag to use for the validation job'
+      package-id:
+        description: 'The package ID to use for the validation job'
 
 permissions: {}
 concurrency:
@@ -9,8 +14,10 @@ concurrency:
     cancel-in-progress: true
 
 jobs:
-  test:
-    name: Test Job
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "Validating workflow"
+  validate:
+    uses: navikt/crm-workflows-base/.github/workflows/validate.yml@458cc725b822532a601914101e3b7ba8368b7e51
+    with:
+      pool-tag: ${{ github.event.inputs.pool-tag }}
+      package-id: ${{ github.event.inputs.package-id }}
+    secrets:
+      PACKAGE_KEY: ${{ secrets.CRM_PACKAGE_KEY }}
