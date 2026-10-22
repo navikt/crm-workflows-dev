@@ -14,11 +14,6 @@ updates:
     cooldown:
       default-days: 7
     groups:
-      gha-major:
-        patterns:
-          - "*"
-        update-types:
-          - "major"
       gha-minor-patch:
         patterns:
           - "*"
@@ -38,10 +33,6 @@ updates:
     cooldown:
       default-days: 7
     groups:
-      npm-production-major:
-        dependency-type: "production"
-        update-types:
-          - "major"
       npm-production-minor-patch:
         dependency-type: "production"
         update-types:
@@ -49,10 +40,6 @@ updates:
           - "patch"
       npm-production-unknown:
         dependency-type: "production"
-      npm-development-major:
-        dependency-type: "development"
-        update-types:
-          - "major"
       npm-development-minor-patch:
         dependency-type: "development"
         update-types:
