@@ -1,0 +1,16 @@
+name: Validate Workflow
+
+on:
+  workflow_dispatch:
+
+permissions: {}
+concurrency:
+    group: ${{ github.ref_name }}
+    cancel-in-progress: true
+
+jobs:
+  test:
+    name: Test Job
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Validating workflow"
