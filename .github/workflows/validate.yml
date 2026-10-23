@@ -13,11 +13,11 @@ concurrency:
 
 jobs:
   validate:
-    uses: navikt/crm-workflows-base/.github/workflows/validate.yml@458cc725b822532a601914101e3b7ba8368b7e51
+    uses: navikt/crm-workflows-base/.github/workflows/validate.yml@99a4c33641ffa0c4a229d2b4f75949186c4d912b
     with:
       pool-tag: ${{ github.event.inputs.pool-tag }}
-      package-id: 'this is a deprecated input'
     secrets:
       PACKAGE_KEY: ${{ secrets.CRM_PACKAGE_KEY }}
     permissions:
       contents: read # Required to read repository contents for validation
+      packages: read # Required to read package information for validation
