@@ -13,10 +13,11 @@ concurrency:
 
 jobs:
   validate:
-    uses: navikt/crm-workflows-base/.github/workflows/validate.yml@99a4c33641ffa0c4a229d2b4f75949186c4d912b
+    uses: navikt/crm-workflows-base/.github/workflows/validate.yml@33d187dd7e7c68c00465edd42b6f36b938225668
     with:
       pool-tag: ${{ github.event.inputs.pool-tag }}
     secrets:
+      DEV_HUB_SFDX_URL: ${{ secrets.CRM_PROD_SFDX_URL }}
       PACKAGE_KEY: ${{ secrets.CRM_PACKAGE_KEY }}
     permissions:
       contents: read # Required to read repository contents for validation
