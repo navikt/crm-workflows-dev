@@ -13,7 +13,7 @@ concurrency:
 
 jobs:
   validate:
-    uses: navikt/crm-workflows-base/.github/workflows/validate.yml@24d0331e4a26ed25bf9533cb8d062d9990c0c16e
+    uses: navikt/crm-workflows-base/.github/workflows/validate.yml@9ed26a5f3c62a52a45e2245acdfacebde98c02bf
     with:
       pool-tag: ${{ github.event.inputs.pool-tag }}
     secrets:
