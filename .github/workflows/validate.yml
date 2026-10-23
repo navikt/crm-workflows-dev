@@ -5,8 +5,6 @@ on:
     inputs:
       pool-tag:
         description: 'The pool tag to use for the validation job'
-      package-id:
-        description: 'The package ID to use for the validation job'
 
 permissions: {}
 concurrency:
@@ -18,6 +16,8 @@ jobs:
     uses: navikt/crm-workflows-base/.github/workflows/validate.yml@458cc725b822532a601914101e3b7ba8368b7e51
     with:
       pool-tag: ${{ github.event.inputs.pool-tag }}
-      package-id: ${{ github.event.inputs.package-id }}
+      package-id: 'this is a deprecated input'
     secrets:
       PACKAGE_KEY: ${{ secrets.CRM_PACKAGE_KEY }}
+    permissions:
+      contents: read # Required to read repository contents for validation
