@@ -1,29 +1,30 @@
 {
-    "namespace": "",
-    "sfdcLoginUrl": "https://login.salesforce.com",
-    "sourceApiVersion": "65.0",
-    "packageDirectories": [
+  "namespace": "",
+  "sfdcLoginUrl": "https://login.salesforce.com",
+  "sourceApiVersion": "65.0",
+  "packageDirectories": [
+    {
+      "path": "temp",
+      "default": true
+    },
+    {
+      "path": "force-app",
+      "package": "crm-workflows-dev",
+      "versionNumber": "0.17.0.NEXT",
+      "definitionFile": "config/project-scratch-def.json",
+      "unpackagedMetadata": {
+        "path": "unpackaged"
+      },
+      "dependencies": [
         {
-            "path": "temp",
-            "default": true
-        },
-        {
-            "path": "force-app",
-            "package": "crm-workflows-dev",
-            "versionNumber": "0.17.0.NEXT",
-            "definitionFile": "config/project-scratch-def.json",
-            "unpackagedMetadata": {
-                "path": "unpackaged"
-            },
-            "dependencies": [
-            {
-                "package": "crm-platform-base",
-                "versionNumber": "0.218.0.LATEST"
-            }]
+          "package": "crm-platform-base",
+          "versionNumber": "0.218.0.LATEST"
         }
-    ],
-    "packageAliases": {
-        "crm-workflows-dev": "0Ho2o000000Kym5CAC",
-        "crm-platform-base": "0Ho2o0000008ORmCAM"
+      ]
     }
+  ],
+  "packageAliases": {
+    "crm-workflows-dev": "0Ho2o000000Kym5CAC",
+    "crm-platform-base": "0Ho2o0000008ORmCAM"
+  }
 }

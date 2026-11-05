@@ -4,12 +4,12 @@ on:
   workflow_dispatch:
     inputs:
       pool-tag:
-        description: 'The pool tag to use for the validation job'
+        description: "The pool tag to use for the validation job"
 
 permissions: {}
 concurrency:
-    group: ${{ github.ref_name }}
-    cancel-in-progress: true
+  group: ${{ github.ref_name }}
+  cancel-in-progress: true
 
 jobs:
   validate:

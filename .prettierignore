@@ -1,29 +1,24 @@
-# List files or directories below to ignore them when running prettier
-# More information: https://prettier.io/docs/en/ignore.html
-#
+# ignore all files
+*
 
-.localdevserver
-.ssdx
-.sfdx
-coverage/
-.vscode
-.github
-jsconfig.json
-.eslintignore
-.eslintrc.json
+# include all folders
+!**/
 
-package-lock.json
-package.json
+# include files to format
+!*.page
+!*.trigger
+!*.Apex
+!*.cls
+!*.md
+!*.js
+!*.json
+!*.ts
+!*.html
+!*.css
+!*.yml
+!*.yaml
 
-**/*.apex
+# These should still be ignored by Prettier
 **/staticresources/*
-
-# flows in permsets will break the xml
-**/permissionsets/*
-**/permissionsetgroups/*
-
-# Exclude project config (edited by CI workflow)
-sfdx-project.json
-
-# Exclude Salesforce Metadata XML
-**/*.xml
+.vscode/**
+pnpm-lock.yaml
