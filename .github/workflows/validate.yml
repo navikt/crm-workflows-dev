@@ -1,6 +1,7 @@
 name: Validate Workflow
 
 on:
+  push:
   workflow_dispatch:
     inputs:
       pool-tag:
@@ -21,7 +22,8 @@ jobs:
   validate:
     uses: navikt/crm-workflows-base/.github/workflows/validate.yml@09fd05e58a83575cd486ee6c50f1ca17ed74c0bf
     with:
-      pool-tag: ${{ github.event.inputs.pool-tag }}
+      pool-tag: ${{ github.event.inputs.pool-tag }} || 'ci-test'
+      run-all-validations: ${{ github.event.inputs.run-all-validations }} || 'false'
     secrets:
       DEV_HUB_SFDX_URL: ${{ secrets.CRM_PROD_SFDX_URL }}
       PACKAGE_KEY: ${{ secrets.CRM_PACKAGE_KEY }}
