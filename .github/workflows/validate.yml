@@ -5,6 +5,12 @@ on:
     inputs:
       pool-tag:
         description: "The pool tag to use for the validation job"
+        required: true
+        default: "ci-test"
+      run-all-validations:
+        description: "Whether to run all validations"
+        required: true
+        default: "false"
 
 permissions: {}
 concurrency:
@@ -13,7 +19,7 @@ concurrency:
 
 jobs:
   validate:
-    uses: navikt/crm-workflows-base/.github/workflows/validate.yml@9fdb562e6a26bb7c671bf23b18794a5ecb282121
+    uses: navikt/crm-workflows-base/.github/workflows/validate.yml@09fd05e58a83575cd486ee6c50f1ca17ed74c0bf
     with:
       pool-tag: ${{ github.event.inputs.pool-tag }}
     secrets:
