@@ -11,7 +11,8 @@ on:
       run-all-validations:
         description: "Whether to run all validations"
         required: true
-        default: "false"
+        type: boolean
+        default: false
 
 permissions: {}
 concurrency:
@@ -23,7 +24,7 @@ jobs:
     uses: navikt/crm-workflows-base/.github/workflows/validate.yml@31cba8ea71c65c8066cbfd242513ad6bebd758f9
     with:
       pool-tag: ${{ github.event.inputs.pool-tag || 'ci-test' }}
-      run-all-validations: ${{ github.event.inputs.run-all-validations || 'false' }}
+      run-all-validations: ${{ github.event.inputs.run-all-validations || false }}
     secrets:
       DEV_HUB_SFDX_URL: ${{ secrets.CRM_PROD_SFDX_URL }}
       PACKAGE_KEY: ${{ secrets.CRM_PACKAGE_KEY }}
