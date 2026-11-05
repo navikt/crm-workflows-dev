@@ -21,7 +21,7 @@ concurrency:
 
 jobs:
   validate:
-    uses: navikt/crm-workflows-base/.github/workflows/validate.yml@129efff14dbe05b8f2331934507533f5aa8b24fa
+    uses: navikt/crm-workflows-base/.github/workflows/validate.yml@5d62be091115df7cda8ff37d43d106ccd190f528
     with:
       pool-tag: ${{ github.event.inputs.pool-tag || 'ci-test' }}
       run-all-validations: ${{ inputs.run-all-validations || false }}
