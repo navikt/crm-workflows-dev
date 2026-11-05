@@ -22,3 +22,5 @@ jobs:
     permissions:
       contents: read # Required to read repository contents for validation
       packages: read # Required to read package information for validation
+      pull-requests: write # Required to add Pull Request comments from static code validation
+      security-events: write # Required to create and manage security events (static code validation)
